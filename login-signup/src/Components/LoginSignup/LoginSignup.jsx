@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import './LoginSignup.css';
 import user_icon from '../Assets/person.png';
 import email_icon from '../Assets/email.png';
@@ -12,9 +11,21 @@ const LoginSignup = () => {
     const [firstname, setFirstname] = useState("");
 
     const handleSignup = () => {
-        axios.post('http://localhost:3000/signup', { email, password, firstname })
+        fetch('http://localhost:3000/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password, firstname }),
+        })
             .then(response => {
-                console.log(response.data);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('User signed up successfully:', data);
                 // Handle successful signup (e.g., show success message, redirect to login)
             })
             .catch(error => {
@@ -22,6 +33,7 @@ const LoginSignup = () => {
                 // Handle error (e.g., show error message)
             });
     };
+
 
     return (
         <div className='container'>
