@@ -6,7 +6,12 @@ import password_icon from '../Assets/password.png';
 
 const LoginSignup = () => {
     const [action, setAction] = useState("Login");
-
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [licenseNum, setLicense] = useState('');
     return (
         <div className='container'>
             <div className="header">
@@ -14,18 +19,40 @@ const LoginSignup = () => {
                 <div className="underline"></div>
             </div>
             <div className="inputs">
-                {action === "Login"?<div></div>:<div className="input">
-                                                                    <img src={user_icon} alt=""/>
-                                                                    <input type="text" placeholder="Name"/>
-                                                                </div>}
 
+                {action === "Sign Up" ? 
+                <div className="input">
+                        <img src={user_icon} alt=""/>
+                        <input type="First Name" placeholder="First name" value={firstName} onChange={e => setFirstName(e.target.value)}/>
+                </div>:<div></div>
+                }
+                {action === "Sign Up" ? 
+                <div className="input">
+                        <img src={user_icon} alt=""/>
+                        <input type="Last Name" placeholder="Last Name" value={lastName} onChange={e => setLastName(e.target.value)}/>
+                </div>:<div></div>
+                    
+                }
+                {action === "Sign Up" ? 
+                <div className="input">
+                        <img src={password_icon} alt=""/>
+                        <input type="License Number" placeholder="Trucking License Number" value={licenseNum} onChange={e => setLicense(e.target.value)}/>
+                </div>:<div></div>
+                }
+
+                {action === "Sign Up" ? 
+                <div className="input">
+                        <img src={password_icon} alt=""/>
+                        <input type="Phone Number" placeholder="Phone Number" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}/>
+                </div>:<div></div>
+                }
                 <div className="input">
                     <img src={email_icon} alt=""/>
-                    <input type="email" placeholder="Email Id"/>
+                    <input type="email" placeholder="Email Id" value={email} onChange={e => setEmail(e.target.value)}/>
                 </div>
                 <div className="input">
                     <img src={password_icon} alt=""/>
-                    <input type="password" placeholder="Password"/>
+                    <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}/>
                 </div>
             </div>
             {action==="Sign Up"?<div></div>:<div className="forgot-password">Lost Password? <span>Click Here</span></div>}
@@ -36,5 +63,4 @@ const LoginSignup = () => {
         </div>
     );
 };
-
 export default LoginSignup;
