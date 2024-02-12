@@ -1,15 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import './AboutPage.css'
-import trucker1 from './trucker1.jpg'
-import trucker2 from './trucker2.jpg'
-import trucker3 from './trucker3.jpg'
-import trucker4 from './trucker4.jpg'
-import trucker5 from './trucker5.jpg'
-import trucker6 from './trucker6.jpg'
-import trucker7 from './trucker7.jpg'
-import trucker8 from './trucker8.jpg'
-import trucker9 from './trucker9.jpg'
-import trucker10 from './trucker10.jpg'
+import trucker1 from '../Assets/trucker1.jpg'
+import trucker2 from '../Assets/trucker2.jpg'
+import trucker3 from '../Assets/trucker3.jpg'
+import trucker4 from '../Assets/trucker4.jpg'
+import trucker5 from '../Assets/trucker5.jpg'
+import trucker6 from '../Assets/trucker6.jpg'
+import trucker7 from '../Assets/trucker7.jpg'
+import trucker8 from '../Assets/trucker8.jpg'
+import trucker9 from '../Assets/trucker9.jpg'
+import trucker10 from '../Assets/trucker10.jpg'
 
 const images = [
     trucker1,
