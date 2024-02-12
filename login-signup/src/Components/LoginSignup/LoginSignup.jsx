@@ -85,10 +85,7 @@ const LoginSignup = () => {
     const [password, setPassword] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [licenseNum, setLicense] = useState('');
-<<<<<<< HEAD
     const [dateOfBirth, setdateOfBirth] = useState('');
-=======
->>>>>>> 5e6c5906f8be8b8cec3169d671bccf3d1240d905
     const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
 
@@ -97,17 +94,10 @@ const LoginSignup = () => {
     const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission behavior
         setAttemptedSubmit(true);
-<<<<<<< HEAD
         const userData = { firstName, lastName, email, password, licenseNum, phoneNumber, dateOfBirth, action };
 
         // Check if all required fields are filled. If not then dont proceed with fetch calls
         if (!firstName || !lastName || !email || !password || !dateOfBirth || (action === "Sign Up" && (!phoneNumber || !licenseNum))) {
-=======
-        const userData = { firstName, lastName, email, password, licenseNum, phoneNumber, action };
-
-        // Check if all required fields are filled. If not then dont proceed with fetch calls
-        if (!firstName || !lastName || !email || !password || (action === "Sign Up" && (!phoneNumber || !licenseNum))) {
->>>>>>> 5e6c5906f8be8b8cec3169d671bccf3d1240d905
             return;
         }
 
@@ -139,10 +129,7 @@ const LoginSignup = () => {
         setPassword('');
         setPhoneNumber('');
         setLicense('');
-<<<<<<< HEAD
         setdateOfBirth('');
-=======
->>>>>>> 5e6c5906f8be8b8cec3169d671bccf3d1240d905
         setAttemptedSubmit(false);
     };
     //Function to handle switching from Sign Up to Login to clear fields
@@ -151,11 +138,7 @@ const LoginSignup = () => {
         // Reset only fields not relevant to login or all if preferred
         setEmail('');
         setPassword('');
-<<<<<<< HEAD
         setAttemptedSubmit(false);
-=======
-        setAttemptedSubmit(false); 
->>>>>>> 5e6c5906f8be8b8cec3169d671bccf3d1240d905
     };
 
     return (
@@ -166,7 +149,6 @@ const LoginSignup = () => {
             </div>
             <div className="inputs">
 
-<<<<<<< HEAD
                 {action === "Sign Up" ? // Input for the drivers first name, located on the sign up page.
                     <div className={`${attemptedSubmit && !firstName ? 'input-error' : 'input'}`}>
                         <img src={user_icon} alt="" />
@@ -224,66 +206,10 @@ const LoginSignup = () => {
 
             {action === "Login" ? <div className="forgot-password">Reset Password? <span>Click Here</span></div> : <div></div>}
             <div className="submit-container">
-=======
-                {action === "Sign Up" ? 
-                <div className={`${attemptedSubmit && !firstName ? 'input-error' : 'input'}`}>
-                    <img src={user_icon} alt=""/>
-                    <input type="text" placeholder="First Name" value={firstName} onChange={e => setFirstName(e.target.value)}/>
-                </div>:<div></div>
-                }
-            
-                {action === "Sign Up" ? 
-                <div className={`${attemptedSubmit && !lastName ? 'input-error' : 'input'}`}>
-                        <img src={user_icon} alt=""/>
-                        <input type="Last Name" placeholder="Last Name" value={lastName} onChange={e => setLastName(e.target.value)}/>
-                </div>:<div></div>
-                    
-                }
-                {action === "Sign Up" ? 
-                <div className={`${attemptedSubmit && !licenseNum ? 'input-error' : 'input'}`}>
-                        <img src={password_icon} alt=""/>
-                        <input type="License Number" placeholder="Trucking License Number" value={licenseNum} onChange={e => setLicense(e.target.value)}/>
-                </div>:<div></div>
-                }
-                
-                {action === "Sign Up" ? 
-                <div className={`${attemptedSubmit && !phoneNumber ? 'input-error' : 'input'}`}>
-                        <img src={password_icon} alt=""/>
-                        <input type="tel" placeholder="Phone Number" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}/>
-                </div>:<div></div>
-                }
-                {action === "Sign Up" || "Login" ? 
-                <div className={`${attemptedSubmit && !email ? 'input-error' : 'input'}`}>
-                    <img src={email_icon} alt=""/>
-                    <input type="email" placeholder="Email Id" value={email} onChange={e => setEmail(e.target.value)}/>
-                </div>:<div></div>
-                }
-                
-                
-                {action === "Sign Up" || "Login" ? 
-                <div className={`${attemptedSubmit && !password ? 'input-error' : 'input'}`}>
-                    <img src={password_icon} alt=""/>
-                    <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}/>
-                </div>:<div></div>
-                }
-                
-            </div>
-            
-            <div className="submit-container">
-                <button className = "submit" type="button" onClick={handleSubmit}>{action}</button>
-            </div>
-            
-            {action === "Login"?<div className="forgot-password">Lost Password? <span>Click Here</span></div>:<div></div>}
-            <div className="submit-container">
->>>>>>> 5e6c5906f8be8b8cec3169d671bccf3d1240d905
                 <div className={action === "Sign Up" ? "submit gray" : "submit"} onClick={switchToSignUp}>Sign Up</div>
                 <div className={action === "Login" ? "submit gray" : "submit"} onClick={switchToLogin}>Login</div>
             </div>
         </div>
     );
 };
-<<<<<<< HEAD
 export default LoginSignup;
-=======
-export default LoginSignup;
->>>>>>> 5e6c5906f8be8b8cec3169d671bccf3d1240d905
