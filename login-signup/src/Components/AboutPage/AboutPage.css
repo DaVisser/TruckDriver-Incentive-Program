@@ -1,3 +1,8 @@
+body {
+    height: 100%;
+    background-attachment: fixed;
+}
+
 .about-container {
     max-width: 800px;
     margin: auto;
@@ -34,25 +39,24 @@ p {
 .slideshow-container {
     max-width: 600px;
   margin: auto;
-  border: 3px solid #2c3e50; /* Example border: solid, 3 pixels, dark blue color */
-  border-radius: 10px; /* Rounded corners */
-  overflow: hidden; /* Ensures the content fits within the borders */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
+  border: 3px solid #2c3e50; 
+  border-radius: 10px; 
+  overflow: hidden; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
 .slideshow-container img {
     width: 100%;
-  height: auto;
-  display: block; /* Removes bottom space/margin */
-  transition: transform 0.5s ease-in-out;
+    height: auto;
+    display: block; 
+    transition: transform 0.5s ease-in-out;
 }
 
 .slideshow-container img:hover {
-    transform: scale(1.05); /* Slightly enlarges the image on hover */
+    transform: scale(1.05); 
   }
 
 .about-footer {
-    position: fixed;
     left: 0;
     bottom: 0;
     margin-bottom: auto;
