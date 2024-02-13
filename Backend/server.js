@@ -11,7 +11,7 @@ app.use(cors({
 }));
 
 app.use(bodyParser.json());
-
+// set as environment vars in beanstalk !!
 // MySQL connection
 const db = mysql.createConnection({
     host: "team06-dbserver.cobd8enwsupz.us-east-1.rds.amazonaws.com",
