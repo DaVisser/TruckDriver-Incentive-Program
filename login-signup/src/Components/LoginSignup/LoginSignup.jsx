@@ -12,6 +12,7 @@ const LoginSignup = () => {
     const [password, setPassword] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [licenseNum, setLicense] = useState('');
+    const [dateOfBirth, setdateOfBirth] = useState('');
     const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
 
@@ -20,10 +21,10 @@ const LoginSignup = () => {
     const handleSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission behavior
         setAttemptedSubmit(true);
-        const userData = { firstName, lastName, email, password, licenseNum, phoneNumber, action };
+        const userData = { firstName, lastName, email, password, licenseNum, phoneNumber,dateOfBirth, action };
         
         // Check if all required fields are filled. If not then dont proceed with fetch calls
-        if (!firstName || !lastName || !email || !password || (action === "Sign Up" && (!phoneNumber || !licenseNum))) {
+        if (!firstName || !lastName || !email || !password || !dateOfBirth || (action === "Sign Up" && (!phoneNumber || !licenseNum))) {
             return;
         }
 
@@ -55,6 +56,7 @@ const LoginSignup = () => {
         setPassword('');
         setPhoneNumber('');
         setLicense('');
+        setdateOfBirth('');
         setAttemptedSubmit(false);
     };
     //Function to handle switching from Sign Up to Login to clear fields
@@ -98,8 +100,14 @@ const LoginSignup = () => {
                 {action === "Sign Up" ? 
                 <div className={`${attemptedSubmit && !phoneNumber ? 'input-error' : 'input'}`}>
                         <img src={password_icon} alt=""/>
-                        <input type="tel" placeholder="Phone Number" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}/>
+                        <input type="tel" placeholder="Phone Number (123-456-7890)" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}/>
                 </div>:<div></div>
+                }
+                {action === "Sign Up" ? 
+                    <div className={`${attemptedSubmit && !dateOfBirth ? 'input-error' : 'input'}`}>
+                        <img src={user_icon} alt="" />
+                        <input type="birthDate" placeholder="Birthdate (YYYY-MM-DD)" value={dateOfBirth} onChange={e => setdateOfBirth(e.target.value)} />
+                    </div> : <div></div>
                 }
                 {action === "Sign Up" || "Login" ? 
                 <div className={`${attemptedSubmit && !email ? 'input-error' : 'input'}`}>
@@ -122,7 +130,7 @@ const LoginSignup = () => {
                 <button className = "submit" type="button" onClick={handleSubmit}>{action}</button>
             </div>
             
-            {action === "Login"?<div className="forgot-password">Lost Password? <span>Click Here</span></div>:<div></div>}
+            {action === "Login"?<div className="forgot-password">Reset Password? <span>Click Here</span></div>:<div></div>}
             <div className="submit-container">
                 <div className={action === "Sign Up" ? "submit gray" : "submit"} onClick={switchToSignUp}>Sign Up</div>
                 <div className={action === "Login" ? "submit gray" : "submit"} onClick={switchToLogin}>Login</div>
