@@ -9,7 +9,7 @@ const port = 8081;
 app.use(cors({
     origin: 'http://localhost:3000' // Allow only the React app to make requests in this case from my laptop running locally.
 }));
-
+//Adding comment so I can try merging this branch to master.
 app.use(bodyParser.json());
 
 // MySQL connection

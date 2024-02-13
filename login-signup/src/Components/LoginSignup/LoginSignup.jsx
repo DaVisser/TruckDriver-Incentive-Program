@@ -21,7 +21,7 @@ const LoginSignup = () => {
         event.preventDefault(); // Prevent default form submission behavior
         setAttemptedSubmit(true);
         const userData = { firstName, lastName, email, password, licenseNum, phoneNumber, action };
-
+        
         // Check if all required fields are filled. If not then dont proceed with fetch calls
         if (!firstName || !lastName || !email || !password || (action === "Sign Up" && (!phoneNumber || !licenseNum))) {
             return;
