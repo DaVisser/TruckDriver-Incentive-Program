@@ -54,3 +54,19 @@ app.get("/users",(req, res)=>{
         return res.json(data);
     })
 })
+
+app.get("/user-count", (req, res) => {
+    const sql = "SELECT COUNT(*) AS count FROM Users";
+    db.query(sql, (err, data) => {
+      if (err) return res.json(err);
+      return res.json({ userCount: data[0].count });
+    });
+});
+  
+app.get("/team-info", (req, res) => {
+    const sql = "SELECT * FROM AboutPageInfo";
+    db.query(sql, (err, data)=>{
+        if(err) return res.json(err);
+        return res.json(data);
+    })
+});

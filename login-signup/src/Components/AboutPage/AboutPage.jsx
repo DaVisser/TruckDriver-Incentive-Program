@@ -43,6 +43,28 @@ function Slideshow() {
   }
 
 function AboutPage() {
+  const [userCount, setUserCount] = useState(null);
+  const [teamInfo, setTeamInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchUserCount = async () => {
+      const response = await fetch('http://localhost:8081/user-count');
+      const data = await response.json();
+      setUserCount(data.userCount);
+    };
+
+    const fetchTeamInfo = async () => {
+      const response = await fetch('http://localhost:8081/team-info');
+      const data = await response.json();
+      setTeamInfo(data[0]);
+    };
+
+    fetchUserCount();
+    fetchTeamInfo();
+  }, []);
+  
+
+  
     return (
       <div className="about-container">
         <header className="about-header">
@@ -58,6 +80,18 @@ function AboutPage() {
             We are proud to work with a network of dedicated professionals and to use cutting-edge technology to bring positive change to the trucking industry. 
             Join us on our journey as we pave the way for a safer, more efficient, and more rewarding future in transportation.
           </p>
+          {teamInfo && (
+          <div className="team-info">
+            <p>Team Number: {teamInfo.TeamNumber}</p>
+            <p>Version Number: {teamInfo.VersionNumber}</p>
+            <p>Release Date: {new Date(teamInfo.ReleaseDate).toLocaleDateString()}</p>
+            <p>Product Name: {teamInfo.ProductName}</p>
+            <p>Product Description: {teamInfo.ProductDesc}</p>
+          </div>
+        )}
+        <p>
+        Number of users: {userCount !== null ? userCount : 'Loading...'}
+        </p>
         </section>
         <Slideshow />
         <footer className="about-footer">
