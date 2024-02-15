@@ -43,6 +43,19 @@ function Slideshow() {
   }
 
 function AboutPage() {
+  const [userCount, setUserCount] = useState(null);
+
+  useEffect(() => {
+    const fetchUserCount = async () => {
+      const response = await fetch('http://localhost:8081/user-count');
+      const data = await response.json();
+      setUserCount(data.userCount);
+    };
+  
+    fetchUserCount();
+  }, []);
+  
+  
     return (
       <div className="about-container">
         <header className="about-header">
@@ -57,6 +70,9 @@ function AboutPage() {
           <p>
             We are proud to work with a network of dedicated professionals and to use cutting-edge technology to bring positive change to the trucking industry. 
             Join us on our journey as we pave the way for a safer, more efficient, and more rewarding future in transportation.
+          </p>
+          <p>
+          Number of users: {userCount !== null ? userCount : 'Loading...'}
           </p>
         </section>
         <Slideshow />
