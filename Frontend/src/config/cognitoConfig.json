@@ -1,0 +1,14 @@
+{
+    "clientId": "4nfvf9mnln2tv6qbf6hca9p8te",
+    "userPoolUri": "team6.auth.us-east-1.amazoncognito.com",
+    "userPool": "us-east-1_eJeqSQcwS",
+    "region": "us-east-1",
+    "callbackUri": "http://localhost:3000/",
+    "signoutUri": "http://localhost:3000/",
+    "tokenScopes": [
+        "openid",
+        "email",
+        "profile",
+        "aws.cognito.signin.user.admin"
+    ]
+}
