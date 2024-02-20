@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-hdmsolutions-dev-221808-authRole",
+      "UnauthRoleArn": "arn:aws:iam::274815321855:role/amplify-hdmsolutions-dev-221808-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::274815321855:role/amplify-hdmsolutions-dev-221808-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-hdmsolutions-dev-221808-deployment",
+      "UnauthRoleName": "amplify-hdmsolutions-dev-221808-unauthRole",
+      "StackName": "amplify-hdmsolutions-dev-221808",
+      "StackId": "arn:aws:cloudformation:us-east-1:274815321855:stack/amplify-hdmsolutions-dev-221808/ac59e920-cf9e-11ee-ae46-0e62325ed9df",
+      "AmplifyAppId": "dl6e1xxl2eyk0"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "dl6e1xxl2eyk0",
+          "type": "manual"
+        }
+      }
+    }
+  }
+}
