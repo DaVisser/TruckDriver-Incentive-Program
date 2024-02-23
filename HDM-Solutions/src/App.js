@@ -33,15 +33,16 @@ import {
 import Login from './Components/CognitoSignup/logged_in.jsx';
 import Logout from './Components/CognitoSignup/logged_out.jsx';
 import Index from './Components/CognitoSignup/index.jsx';
+import AboutPage from './Components/AboutPage/AboutPage.jsx';
 
 function Welcome() {
     return (
         <div>
             <h3>Welcome to HDM Solutions Trucking Rewards!</h3>
             <p>
-                <Link to="https://team06.auth.us-east-1.amazoncognito.com/login?client_id=6ug5o2oo8pgg3t1o9e5h81sgee&response_type=code&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin">Register or Login</Link>
+                <Link to="https://team06.auth.us-east-1.amazoncognito.com/login?client_id=6ug5o2oo8pgg3t1o9e5h81sgee&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fdev.dl6e1xxl2eyk0.amplifyapp.com">Register or Login</Link>
                 <br></br>
-                <Link to="https://team06.auth.us-east-1.amazoncognito.com/logout?client_id=6ug5o2oo8pgg3t1o9e5h81sgee&email+openid+phone&logout_uri=http%3A%2F%2Flocalhost%3A3000%2Flogout">Log back out</Link>
+                <Link to="https://team06.auth.us-east-1.amazoncognito.com/logout?client_id=6ug5o2oo8pgg3t1o9e5h81sgee&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fdev.dl6e1xxl2eyk0.amplifyapp.com">Log back out</Link>
                 <br></br>
             </p>
         </div>
@@ -56,6 +57,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/index" element={<Index />} />
+                <Route path="/about" element={<AboutPage />} />
             </Routes>
         </Router>
     );
