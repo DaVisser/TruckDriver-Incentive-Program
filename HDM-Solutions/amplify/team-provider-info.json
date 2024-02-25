@@ -17,6 +17,17 @@
           "appId": "dl6e1xxl2eyk0",
           "type": "manual"
         }
+      },
+      "auth": {
+        "hdmsolutions41aa3ce4": {
+          "userPoolId": "us-east-1_2qaCHCZk4",
+          "userPoolName": "Team06-Cognito-UserPool",
+          "webClientId": "6ug5o2oo8pgg3t1o9e5h81sgee",
+          "nativeClientId": "6ug5o2oo8pgg3t1o9e5h81sgee"
+        }
+      },
+      "api": {
+        "hdmsolutions": {}
       }
     }
   }

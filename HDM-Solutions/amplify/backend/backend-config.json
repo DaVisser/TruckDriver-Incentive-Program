@@ -1,4 +1,31 @@
 {
+  "api": {
+    "hdmsolutions": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 7
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
+  "auth": {
+    "hdmsolutions41aa3ce4": {
+      "customAuth": false,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "imported"
+    }
+  },
   "hosting": {
     "amplifyhosting": {
       "providerPlugin": "awscloudformation",
@@ -7,6 +34,38 @@
     }
   },
   "parameters": {
+    "AMPLIFY_auth_hdmsolutions41aa3ce4_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "hdmsolutions41aa3ce4"
+        }
+      ]
+    },
+    "AMPLIFY_auth_hdmsolutions41aa3ce4_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "hdmsolutions41aa3ce4"
+        }
+      ]
+    },
+    "AMPLIFY_auth_hdmsolutions41aa3ce4_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "hdmsolutions41aa3ce4"
+        }
+      ]
+    },
+    "AMPLIFY_auth_hdmsolutions41aa3ce4_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "hdmsolutions41aa3ce4"
+        }
+      ]
+    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {
