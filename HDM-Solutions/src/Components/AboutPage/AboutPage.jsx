@@ -43,10 +43,9 @@ function Slideshow() {
     );
   }
 
-const AboutPage = ({ signOut }) => {
+function AboutPage() {
     return (
       <div className="about-container">
-      <button onClick={signOut}>Sign out</button>
         <header className="about-header">
           <h1>Welcome to HDM Solutions</h1>
         </header>

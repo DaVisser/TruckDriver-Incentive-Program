@@ -281,20 +281,8 @@ const components = {
   
   export default function App() {
     return (
-        <Authenticator>
-            {({ signOut }) => (
-                <Router>
-                    <div>
-                        <nav>
-                            <Link to="/">Home</Link> | <Link to="/about">About</Link>
-                        </nav>
-                        <Routes>
-                            <Route path="/" element={<button onClick={signOut}>Sign out</button>} />
-                            <Route path="/about" element={<AboutPage signOut={signOut} />} />
-                        </Routes>
-                    </div>
-                </Router>
-            )}
-        </Authenticator>
+      <Authenticator formFields={formFields} components={components}>
+        {({ signOut }) => <button onClick={signOut}>Sign out</button>}
+      </Authenticator>
     );
-}
+  }
