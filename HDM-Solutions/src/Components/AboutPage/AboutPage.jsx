@@ -43,7 +43,7 @@ function Slideshow() {
     );
   }
 
-function AboutPage() {
+const AboutPage = ({ signOut }) => {
     return (
       <div className="about-container">
       <button onClick={signOut}>Sign out</button>
