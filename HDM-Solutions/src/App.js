@@ -18,28 +18,28 @@ import AboutPage from './Components/AboutPage/AboutPage.jsx';
 
 Amplify.configure(awsExports)
 
-// function Welcome() {
-//     return (
-//         <Authenticator>
-//         {({ signOut, user }) => (
-//             <main>
-//             <div className="App">
-//                 <header className="App-header">
-//                     <button onClick={signOut}>Sign out</button>
-//                     <h2>My App Content</h2>
-//                 </header>
-//             </div>
-//             </main>
-//         )}
-//         </Authenticator>
-//     );
-// }
+function Welcome() {
+    return (
+        <Authenticator>
+        {({ signOut, user }) => (
+            <main>
+            <div className="App">
+                <header className="App-header">
+                    <button onClick={signOut}>Sign out</button>
+                    <h2>My App Content</h2>
+                </header>
+            </div>
+            </main>
+        )}
+        </Authenticator>
+    );
+}
 
 function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<AboutPage />} /> 
+                <Route path="/" element={<Welcome />} /> 
                 <Route path="/index" element={<Index />} />
                 <Route path="/about" element={<AboutPage />} />
             </Routes>
