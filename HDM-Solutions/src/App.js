@@ -294,7 +294,7 @@ export default function App() {
                             <Route path="/" element={<button onClick={signOut}>Sign out</button>} />
                             <Route path="/about" element={<AboutPage signOut={signOut} />} />
                             <Route path="/profile" element={<ProfilePage signOut={signOut} />} />
-                            <Route path="/catalog" element={<Catalog signOut={signOut} />} />
+                            <Route path="/catalog" element={<ProductCatalog signOut={signOut} />} />
                         </Routes>
                     </div>
                 </Router>
