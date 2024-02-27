@@ -18,10 +18,11 @@ export default ProfilePage;
 */
 
 import React from 'react';
-import { Grid, Header, Segment, Button } from 'semantic-ui-react'; // Assuming you're using Semantic UI React for styling
+import { Grid, Header, Segment, Button } from 'semantic-ui-react';
 
 const ProfilePage = () => {
     const driverInfo = {
+        // Fake login information
         given_name: 'John',
         family_name: 'Doe',
         email: 'john@example.com',
@@ -30,6 +31,18 @@ const ProfilePage = () => {
         gender: 'Male',
         LicenseID: '123456789',
         Role: 'Driver'
+    };
+
+    const handleUpdateProfile = () => {
+        // Implement update profile functionality here
+    };
+
+    const handleEditLoginInfo = () => {
+        // Implement edit login information functionality here
+    };
+
+    const handleDeleteAccount = () => {
+        // Implement delete account functionality here
     };
 
     return (
@@ -46,8 +59,9 @@ const ProfilePage = () => {
                     <p><strong>License ID:</strong> {driverInfo.LicenseID}</p>
                     <p><strong>Role:</strong> {driverInfo.Role}</p>
                     
-                    <Button color='blue'>Update Profile</Button>
-                    <Button color='red'>Delete Account</Button>
+                    <Button color='blue' onClick={handleUpdateProfile}>Update Profile</Button>
+                    <Button color='green' onClick={handleEditLoginInfo}>Edit Login Info</Button>
+                    <Button color='red' onClick={handleDeleteAccount}>Delete Account</Button>
                 </Grid.Column>
             </Grid>
         </Segment>
