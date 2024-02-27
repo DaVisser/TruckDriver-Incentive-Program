@@ -15,6 +15,7 @@ import Login from './Components/CognitoSignup/logged_in.jsx';
 import Logout from './Components/CognitoSignup/logged_out.jsx';
 import Index from './Components/CognitoSignup/index.jsx';
 import AboutPage from './Components/AboutPage/AboutPage.jsx';
+import ProfilePage from './Components/ProfilePage/ProfilePage.jsx';
 import hdmsolutionslogo from './Components/Assets/hdm-solutions-logo.jpg'
 
 Amplify.configure(awsExports)
@@ -286,11 +287,12 @@ export default function App() {
                 <Router>
                     <div>
                         <nav>
-                            <Link to="/">Home</Link> | <Link to="/about">About</Link>
+                            <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/profile">Profile</Link>
                         </nav>
                         <Routes>
                             <Route path="/" element={<button onClick={signOut}>Sign out</button>} />
                             <Route path="/about" element={<AboutPage signOut={signOut} />} />
+                            <Route path="/profile" element={<ProfilePage signOut={signOut} />} />
                         </Routes>
                     </div>
                 </Router>
