@@ -1,0 +1,56 @@
+.dashboard {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .welcome-banner {
+    background: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .driver-score,
+  .safety-tips,
+  .upcoming-routes,
+  .rewards {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    color: #333; 
+  }
+  
+.rewards p, .safety-tips p, .driver-score p{
+    color: #333;
+}
+
+  .driver-score h2,
+  .safety-tips h2,
+  .upcoming-routes h2,
+  .rewards h2 {
+    margin: 0 0 10px 0;
+  }
+  
+  .upcoming-routes ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .upcoming-routes li {
+    margin-bottom: 5px;
+  }
+  
+  .footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #666;
+  }
+  
