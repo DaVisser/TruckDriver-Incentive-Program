@@ -11,13 +11,12 @@ import './App.css'
 import { AmplifySignOut, withAuthenticator } from '@aws-amplify/ui-react';
 import { Authenticator, useAuthenticator, View, Button, Heading, TextField, useTheme, Image, Text } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import Login from './Components/CognitoSignup/logged_in.jsx';
-import Logout from './Components/CognitoSignup/logged_out.jsx';
-import Index from './Components/CognitoSignup/index.jsx';
+import HomePage from "./Components/HomePage/HomePage.jsx";
 import AboutPage from './Components/AboutPage/AboutPage.jsx';
 import ProfilePage from './Components/ProfilePage/ProfilePage.jsx';
 import ProductCatalog from './Components/ProductCatalog/ProductCatalog.jsx';
-import hdmsolutionslogo from './Components/Assets/hdm-solutions-logo.jpg'
+import hdmsolutionslogo from './Components/Assets/hdm-solutions-logo.jpg';
+
 
 Amplify.configure(awsExports)
 
@@ -281,20 +280,28 @@ const components = {
     },
   };
   
-export default function App() {
+  export default function App() {
     return (
         <Authenticator formFields={formFields} components={components}>
             {({ signOut }) => (
                 <Router>
                     <div>
                         <nav>
-                            <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/profile">Profile</Link> | <Link to="/catalog">Catalog</Link>
+                            <div className="nav-links">
+                                <Link to="/">Home</Link>
+                                <Link to="/about">About</Link>
+                                <Link to="/profile">Profile</Link>
+                                <Link to="/catalog">Catalog</Link>
+                            </div>
+                            <div className="nav-signout">
+                                <button onClick={signOut}>Sign out</button>
+                            </div>
                         </nav>
                         <Routes>
-                            <Route path="/" element={<button onClick={signOut}>Sign out</button>} />
-                            <Route path="/about" element={<AboutPage signOut={signOut} />} />
-                            <Route path="/profile" element={<ProfilePage signOut={signOut} />} />
-                            <Route path="/catalog" element={<ProductCatalog signOut={signOut} />} />
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/about" element={<AboutPage />} />
+                            <Route path="/profile" element={<ProfilePage />} />
+                            <Route path="/catalog" element={<ProductCatalog />} />
                         </Routes>
                     </div>
                 </Router>
