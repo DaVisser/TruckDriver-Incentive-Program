@@ -26,6 +26,18 @@
       "serviceType": "imported"
     }
   },
+  "function": {
+    "loginEventsLambda": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "team06AboutPage": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "hosting": {
     "amplifyhosting": {
       "providerPlugin": "awscloudformation",
@@ -63,6 +75,38 @@
         {
           "category": "auth",
           "resourceName": "hdmsolutions41aa3ce4"
+        }
+      ]
+    },
+    "AMPLIFY_function_loginEventsLambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "loginEventsLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_loginEventsLambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "loginEventsLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_team06AboutPage_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "team06AboutPage"
+        }
+      ]
+    },
+    "AMPLIFY_function_team06AboutPage_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "team06AboutPage"
         }
       ]
     },
