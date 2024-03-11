@@ -1,56 +1,90 @@
 .dashboard {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-    background: #f5f5f5;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .welcome-banner {
-    background: #4caf50;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  .driver-score,
-  .safety-tips,
-  .upcoming-routes,
-  .rewards {
-    margin-top: 20px;
-    padding: 15px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    color: #333; 
-  }
-  
-.rewards p, .safety-tips p, .driver-score p{
-    color: #333;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-  .driver-score h2,
-  .safety-tips h2,
-  .upcoming-routes h2,
-  .rewards h2 {
-    margin: 0 0 10px 0;
-  }
-  
-  .upcoming-routes ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .upcoming-routes li {
-    margin-bottom: 5px;
-  }
-  
-  .footer {
-    margin-top: 30px;
-    text-align: center;
-    color: #666;
-  }
-  
+.welcome-banner {
+  background: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.driver-score,
+.safety-tips,
+.upcoming-routes,
+.rewards {
+  margin-top: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: #333; 
+}
+
+.rewards p, .safety-tips p, .driver-score p{
+  color: #333;
+}
+
+.driver-score h2,
+.safety-tips h2,
+.upcoming-routes h2,
+.rewards h2 {
+  margin: 0 0 10px 0;
+}
+
+.upcoming-routes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.upcoming-routes li {
+  margin-bottom: 5px;
+}
+
+.footer {
+  margin-top: 30px;
+  text-align: center;
+  color: #000000;
+}
+
+/* Adjustments for the section title */
+.login-events h2 {
+  font-weight: bold; /* Makes the text bold */
+  color: #000; /* Sets the text color to black */
+}
+
+/* Adjustments for the .login-events table headers and data */
+.login-events th, .login-events td {
+  color: #000; /* Sets the text color to black for better readability */
+}
+
+/* Keep the previous adjustments for the table and rows */
+.login-events table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 3px solid #333; /* Bold table outline */
+}
+
+/* Adjustments for the .login-events table headers */
+.login-events th {
+  border: 1px solid #333; /* Adjust cell borders for better visibility */
+  padding: 8px;
+  text-align: left; /* Aligns header text to the left */
+  background-color: #4CAF50; /* Header background */
+  color: white; /* Ensures text color is white for contrast */
+}
+
+.login-events tr:nth-child(odd) {
+  background-color: #f2f2f2; /* Lighter shade for odd rows */
+}
+
+.login-events tr:nth-child(even) {
+  background-color: #d6d6d6; /* Slightly darker shade for even rows */
+}
