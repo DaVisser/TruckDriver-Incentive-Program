@@ -8,12 +8,8 @@ import {
 import { Amplify } from "aws-amplify";
 import awsExports from './aws-exports';
 import './App.css'
-import { AmplifySignOut, withAuthenticator } from '@aws-amplify/ui-react';
 import { Authenticator, useAuthenticator, View, Button, Heading, TextField, useTheme, Image, Text } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import Login from './Components/CognitoSignup/logged_in.jsx';
-import Logout from './Components/CognitoSignup/logged_out.jsx';
-import Index from './Components/CognitoSignup/index.jsx';
 import AboutPage from './Components/AboutPage/AboutPage.jsx';
 import ProfilePage from './Components/ProfilePage/ProfilePage.jsx';
 import ProductCatalog from './Components/ProductCatalog/ProductCatalog.jsx';
