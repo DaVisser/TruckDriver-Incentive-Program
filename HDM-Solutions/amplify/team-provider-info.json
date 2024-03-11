@@ -28,6 +28,17 @@
       },
       "api": {
         "hdmsolutions": {}
+      },
+      "function": {
+        "team06Aboutpage": {},
+        "loginEventsLambda": {
+          "deploymentBucketName": "amplify-hdmsolutions-dev-221808-deployment",
+          "s3Key": "amplify-builds/loginEventsLambda-5273684b6b304b4f4f72-build.zip"
+        },
+        "team06AboutPage": {
+          "deploymentBucketName": "amplify-hdmsolutions-dev-221808-deployment",
+          "s3Key": "amplify-builds/team06AboutPage-6d6235784a63554e6d33-build.zip"
+        }
       }
     }
   }
