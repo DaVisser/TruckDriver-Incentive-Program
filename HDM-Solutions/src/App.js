@@ -15,6 +15,7 @@ import HomePage from "./Components/HomePage/HomePage.jsx";
 import AboutPage from './Components/AboutPage/AboutPage.jsx';
 import ProfilePage from './Components/ProfilePage/ProfilePage.jsx';
 import ProductCatalog from './Components/ProductCatalog/ProductCatalog.jsx';
+import ApplicationPage from './Components/ApplicationPage/ApplicationPage.jsx';
 import hdmsolutionslogo from './Components/Assets/hdm-solutions-logo.jpg';
 
 
@@ -292,6 +293,7 @@ const components = {
                                 <Link to="/about">About</Link>
                                 <Link to="/profile">Profile</Link>
                                 <Link to="/catalog">Catalog</Link>
+                                <Link to="/application">Application</Link>
                             </div>
                             <div className="nav-signout">
                                 <button onClick={signOut}>Sign out</button>
@@ -302,6 +304,7 @@ const components = {
                             <Route path="/about" element={<AboutPage />} />
                             <Route path="/profile" element={<ProfilePage />} />
                             <Route path="/catalog" element={<ProductCatalog />} />
+                            <Route path="/application" element={<ApplicationPage />} />
                         </Routes>
                     </div>
                 </Router>

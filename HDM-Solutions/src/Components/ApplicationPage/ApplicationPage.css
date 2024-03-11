@@ -1,0 +1,41 @@
+.segment {
+  margin: 20px;
+}
+
+.grid {
+  margin-top: 20px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.form {
+  width: 100%;
+}
+
+.message {
+  margin-top: 10px;
+}
+
+.modal {
+  text-align: center;
+}
+
+.modal.content {
+  padding: 20px;
+}
+
+.modal.actions {
+  justify-content: center;
+}
+
+.delete-button {
+  margin-top: 20px;
+}
+
+.button.submit {
+  margin-top: 10px;
+}
+
+/* Adjust styles as needed */
