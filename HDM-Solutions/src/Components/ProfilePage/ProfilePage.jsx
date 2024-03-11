@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Header, Segment, Button, Form, Message } from 'semantic-ui-react';
+import { Grid, Header, Segment, Button, Form, Message, Image } from 'semantic-ui-react';
 
 const ProfilePage = () => {
     const [displaySection, setDisplaySection] = useState('profile');
@@ -15,6 +15,7 @@ const ProfilePage = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [profilePicture, setProfilePicture] = useState(null);
 
     const driverInfo = {
         given_name: 'John',
@@ -76,14 +77,31 @@ const ProfilePage = () => {
         setErrorMessage('');
         setSuccessMessage('');
     };
-    
+
+
+    // Function to handle profile picture change
+    const handleProfilePictureChange = (e) => {
+        const file = e.target.files[0];
+        setProfilePicture(file);
+    };
+
 
     return (
         <Segment color="blue">
             <Grid padded>
                 <Grid.Column>
                     <Header as="h1">Driver Profile</Header>
-                    
+
+                    {/* Profile Picture */}
+                    {profilePicture && <Image src={URL.createObjectURL(profilePicture)} size='medium' circular />}
+
+                    {/* Input for profile picture */}
+                    <Form.Input
+                        type='file'
+                        label='Profile Picture'
+                        onChange={handleProfilePictureChange}
+                    />
+
                     <Button color='blue' onClick={handleUpdateProfile}>Update Profile</Button>
                     <Button color='green' onClick={handleEditLoginInfo}>Edit Login Info</Button>
                     <Button color='red' onClick={handleDeleteAccount}>Delete Account</Button>
@@ -204,7 +222,7 @@ const ProfilePage = () => {
                             )}
                         </Form>
                     )}
-                    
+
                     {displaySection === 'deleteAccount' && (
                         <>
                             <p>Are you sure you want to delete your account?</p>
@@ -222,10 +240,10 @@ const ProfilePage = () => {
                                     value={currentPassword}
                                     onChange={(e) => setCurrentPassword(e.target.value)}
                                 />
-                    
+
                                 <Button color='red' onClick={handleDeleteConfirmation}>Delete Account</Button>
                                 <Button color='red' onClick={handleDeleteConfirmation}>Cancel</Button>
-                    
+
                                 {errorMessage && (
                                     <Message error content={errorMessage} />
                                 )}
@@ -235,7 +253,7 @@ const ProfilePage = () => {
                             </Form>
                         </>
                     )}
-                
+
                 </Grid.Column>
             </Grid>
         </Segment>
