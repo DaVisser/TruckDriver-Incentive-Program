@@ -10,10 +10,7 @@ import awsExports from './aws-exports';
 import './App.css'
 import { Authenticator, useAuthenticator, View, Button, Heading, TextField, useTheme, Image, Text } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-<<<<<<< HEAD
 import HomePage from "./Components/HomePage/HomePage.jsx";
-=======
->>>>>>> e36293a8d9bd7cc64c9913704b6f6546da29bbd6
 import AboutPage from './Components/AboutPage/AboutPage.jsx';
 import ProfilePage from './Components/ProfilePage/ProfilePage.jsx';
 import ProductCatalog from './Components/ProductCatalog/ProductCatalog.jsx';
