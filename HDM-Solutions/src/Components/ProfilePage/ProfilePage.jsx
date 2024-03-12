@@ -39,9 +39,9 @@ const ProfilePage = () => {
         given_name: userInfo['FirstName'],
         family_name: userInfo['LastName'],
         email: userInfo['Email'],
-        birthdate: '1990-01-01',
-        phone_number: '+1234567890',
-        gender: 'Male',
+        birthdate: userInfo['birthdate'],
+        phone_number: userInfo['phone_number'],
+        gender: userInfo['gender'],
         LicenseID: '123456789',
         Role: 'Driver',
         Application_Status: 'Pending'
