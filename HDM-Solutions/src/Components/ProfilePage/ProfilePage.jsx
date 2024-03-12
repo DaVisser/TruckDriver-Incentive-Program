@@ -27,7 +27,8 @@ const ProfilePage = () => {
         gender: 'Male',
         LicenseID: '123456789',
         Role: 'Driver',
-        Application_Status: 'Pending'
+        Application_Status: 'Pending',
+        Ticket_Status: 'Pending'
     };
 
     const handleUpdateProfile = () => {
@@ -107,6 +108,7 @@ const ProfilePage = () => {
                             <p><strong>License ID:</strong> {driverInfo.LicenseID}</p>
                             <p><strong>Role:</strong> {driverInfo.Role}</p>
                             <p><strong>Application Status:</strong> {driverInfo.Application_Status}</p>
+                            <p><strong>Ticket Status:</strong> {driverInfo.Ticket_Status}</p>
                         </>
                     )}
 
