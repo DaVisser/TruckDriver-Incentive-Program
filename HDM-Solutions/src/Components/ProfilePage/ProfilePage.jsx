@@ -16,11 +16,29 @@ const ProfilePage = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
+    const [userInfo, setUserInfo] = useState([]);
 
+    const fetchUserInfo = async () => {
+        try {
+          const session = await Auth.currentSession(); // Get the current user session
+          const token = session.getIdToken().getJwtToken(); // Get the JWT token
+          const response = await fetch('https://7u2pt3y8zd.execute-api.us-east-1.amazonaws.com/prod/UserInfo',{
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            },
+          });
+          const data = await response.json();
+          console.log('Fetched data:', data); // Check the fetched data
+          setUserInfo(data);
+        } catch (error) {
+          console.error('Error fetching user info:', error);
+        }
+      };
     const driverInfo = {
-        given_name: 'John',
-        family_name: 'Doe',
-        email: 'john@example.com',
+        given_name: userInfo['FirstName'],
+        family_name: userInfo['LastName'],
+        email: userInfo['Email'],
         birthdate: '1990-01-01',
         phone_number: '+1234567890',
         gender: 'Male',
