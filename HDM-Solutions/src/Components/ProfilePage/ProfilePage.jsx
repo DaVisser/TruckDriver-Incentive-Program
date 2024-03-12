@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Header, Segment, Button, Form, Message, Image } from 'semantic-ui-react';
-import { Auth } from 'aws-amplify';
+import { getCurrentUser } from 'aws-amplify/auth';
 
 const ProfilePage = () => {
     const [displaySection, setDisplaySection] = useState('profile');
@@ -31,12 +31,12 @@ const ProfilePage = () => {
     });
     const fetchUserInfo = async () => {
         try {
-          //const session = await Auth.currentSession();
-          const token = 'PlaceHolder';
+            const userSession = await getCurrentUser();
+            const userId = userSession.userId;
           const response = await fetch('https://7u2pt3y8zd.execute-api.us-east-1.amazonaws.com/prod/UserInfo',{
             method: 'GET',
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${userId}`,
             },
           });
           const data = await response.json();
