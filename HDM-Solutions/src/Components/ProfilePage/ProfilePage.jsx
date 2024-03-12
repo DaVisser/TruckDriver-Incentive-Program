@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Header, Segment, Button, Form, Message, Image } from 'semantic-ui-react';
+import { Auth } from 'aws-amplify';
 
 const ProfilePage = () => {
     const [displaySection, setDisplaySection] = useState('profile');
@@ -17,35 +18,56 @@ const ProfilePage = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
     const [userInfo, setUserInfo] = useState([]);
-
+    const [driverInfo, setDriverInfo] = useState({
+        given_name: 'test',
+        family_name: '',
+        email: '',
+        birthdate: '',
+        phone_number: '',
+        gender: '',
+        LicenseID: '',
+        Role: '',
+        Application_Status: 'Pending'
+    });
     const fetchUserInfo = async () => {
         try {
-          const session = await Auth.currentSession(); // Get the current user session
-          const token = session.getIdToken().getJwtToken(); // Get the JWT token
+          //const session = await Auth.currentSession();
+          const token = 'PlaceHolder';
           const response = await fetch('https://7u2pt3y8zd.execute-api.us-east-1.amazonaws.com/prod/UserInfo',{
             method: 'GET',
             headers: {
-                Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+                Authorization: `Bearer ${token}`,
             },
           });
           const data = await response.json();
-          console.log('Fetched data:', data); // Check the fetched data
-          setUserInfo(data);
+          if (data.length > 0) {
+            // Assuming data is an array of users, and you're interested in the first one
+            const user = data[0];
+            console.log('Fetched user:', user); // Inspect the user
+            setUserInfo(user); // Save the user object to state
+            } else {
+                console.log('No user data returned');
+            }
         } catch (error) {
           console.error('Error fetching user info:', error);
         }
       };
-    const driverInfo = {
-        given_name: userInfo['FirstName'],
-        family_name: userInfo['LastName'],
-        email: userInfo['Email'],
-        birthdate: userInfo['birthdate'],
-        phone_number: userInfo['phone_number'],
-        gender: userInfo['gender'],
-        LicenseID: '123456789',
-        Role: 'Driver',
-        Application_Status: 'Pending'
-    };
+      useEffect(() => {
+        fetchUserInfo();
+      }, []);
+      useEffect(() => {
+        setDriverInfo({
+            given_name: userInfo.FirstName || '',
+            family_name: userInfo.LastName || '',
+            email: userInfo.Email || '',
+            birthdate: userInfo.DateOfBirth ? userInfo.DateOfBirth.split("T")[0] : '',
+            phone_number: userInfo.PhoneNumber || '',
+            gender: userInfo.Gender || '',
+            LicenseID: userInfo.TruckingLicense || '',
+            Role: userInfo.Role || '',
+        });
+    }, [userInfo]);
+    
 
     const handleUpdateProfile = () => {
         setDisplaySection('updateProfile');
