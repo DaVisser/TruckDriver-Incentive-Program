@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Grid, Header, Segment, Button, Form, Message } from 'semantic-ui-react';
 import './ProfilePage.css';
 
-
 const ProfilePage = () => {
     const [displaySection, setDisplaySection] = useState('profile');
     const [firstName, setFirstName] = useState('');
