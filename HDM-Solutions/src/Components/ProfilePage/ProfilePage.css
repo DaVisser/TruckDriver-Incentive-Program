@@ -1,42 +1,48 @@
 .segment {
-    margin: 20px;
-  }
-  
-  .grid {
-    margin-top: 20px;
-  }
-  
-  .header {
-    margin-bottom: 20px;
-  }
-  
-  .form {
-    width: 100%;
-  }
-  
-  .message {
-    margin-top: 10px;
-  }
-  
-  .modal {
-    text-align: center;
-  }
-  
-  .modal.content {
-    padding: 20px;
-  }
-  
-  .modal.actions {
-    justify-content: center;
-  }
-  
-  .delete-button {
-    margin-top: 20px;
-  }
-  
-  .button.submit {
-    margin-top: 10px;
-  }
-  
-  /* Adjust styles as needed */
-  
+  margin: 20px;
+  padding: 20px; /* Added padding for better spacing */
+  border: 1px solid #ddd; /* Added border for better separation */
+  border-radius: 5px; /* Rounded corners for a softer look */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
+}
+
+.grid {
+  margin-top: 20px;
+}
+
+.header {
+  text-align: center;
+  color: #00a2ff;
+  margin-bottom: 20px;
+  font-size: 40px;
+}
+
+.form {
+  width: 100%;
+}
+
+.message {
+  margin-top: 10px;
+}
+
+.modal {
+  text-align: center;
+}
+
+.modal.content {
+  padding: 20px;
+}
+
+.modal.actions {
+  justify-content: center;
+}
+
+.delete-button {
+  margin-top: 20px;
+}
+
+.button.submit {
+  margin-top: 10px;
+}
+
+/* Adjust styles as needed */

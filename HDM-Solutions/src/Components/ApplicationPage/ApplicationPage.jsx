@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './ApplicationPage.css';
 
 function TruckDriverProfile() {
   const [displaySection, setDisplaySection] = useState('updateProfile');
@@ -11,11 +12,12 @@ function TruckDriverProfile() {
   const [licenseID, setLicenseID] = useState('');
   const [sponsor, setSponsor] = useState('');
 
-  // Here you can use useEffect or any other mechanism to fetch and set driverInfo
 
   return (
     <div>
-      <h1>Truck Driver Applications</h1>
+      <header className="header">
+        <h4>Driver Applications</h4>
+      </header>
       <button onClick={() => setDisplaySection('submitApplication')}>Create New Application</button>
       <button onClick={() => setDisplaySection('viewPreviousApplications')}>View Previous Applications</button>
 
@@ -69,7 +71,6 @@ function TruckDriverProfile() {
 
       {displaySection === 'viewPreviousApplications' && (
         <div>
-          {/* Placeholder for viewing previous applications */}
           <p>View Previous Applications Section</p>
         </div>
       )}

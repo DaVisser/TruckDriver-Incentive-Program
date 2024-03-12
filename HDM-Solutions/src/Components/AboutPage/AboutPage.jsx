@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { AmplifySignOut } from '@aws-amplify/ui-react';
 import './AboutPage.css'
 import trucker1 from '../Assets/trucker1.jpg'
 import trucker2 from '../Assets/trucker2.jpg'

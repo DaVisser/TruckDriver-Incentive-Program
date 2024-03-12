@@ -1,41 +1,73 @@
-.segment {
-  margin: 20px;
-}
-
-.grid {
-  margin-top: 20px;
-}
-
 .header {
-  margin-bottom: 20px;
-}
-
-.form {
-  width: 100%;
-}
-
-.message {
-  margin-top: 10px;
-}
-
-.modal {
   text-align: center;
+  color: #00a2ff;
+  margin-bottom: 20px;
+  font-size: 24px;
 }
 
-.modal.content {
+button {
+  background-color: #00a2ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #007bbd;
+}
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
   padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
-.modal.actions {
-  justify-content: center;
+label {
+  display: block;
+  margin-bottom: 10px;
 }
 
-.delete-button {
-  margin-top: 20px;
+input[type='text'],
+input[type='email'],
+input[type='date'],
+input[type='tel'],
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
-.button.submit {
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  appearance: none; /* Removes default dropdown arrow */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2300a2ff' class='bi bi-caret-down-fill' viewBox='0 0 16 16'%3e%3cpath d='M3.232 5h9.536L8 9.982 3.232 5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+button[type='submit'] {
+  background-color: #00a2ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
   margin-top: 10px;
+  cursor: pointer;
+}
+
+button[type='submit']:hover {
+  background-color: #007bbd;
 }
 
 /* Adjust styles as needed */

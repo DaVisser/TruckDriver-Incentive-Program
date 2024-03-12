@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Grid, Header, Segment, Button, Form, Message } from 'semantic-ui-react';
+import './ProfilePage.css';
 
 const ProfilePage = () => {
     const [displaySection, setDisplaySection] = useState('profile');
@@ -13,6 +14,7 @@ const ProfilePage = () => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [issueDescription, setIssueDescription] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
@@ -47,6 +49,11 @@ const ProfilePage = () => {
 
     const handleDeleteAccount = () => {
         setDisplaySection('deleteAccount');
+        clearErrorMessages();
+    };
+
+    const handleSubmitTicket = () => {
+        setDisplaySection('submitTicket');
         clearErrorMessages();
     };
 
@@ -87,6 +94,7 @@ const ProfilePage = () => {
                     <Button color='blue' onClick={handleUpdateProfile}>Update Profile</Button>
                     <Button color='green' onClick={handleEditLoginInfo}>Edit Login Info</Button>
                     <Button color='red' onClick={handleDeleteAccount}>Delete Account</Button>
+                    <Button color='yellow' onClick={handleSubmitTicket}>Driver Issues Ticket</Button>
 
                     {displaySection === 'profile' && (
                         <>
@@ -234,6 +242,46 @@ const ProfilePage = () => {
                                 )}
                             </Form>
                         </>
+                    )}
+
+                    {displaySection === 'submitTicket' && (
+                        <Form>
+                            <Form.Input
+                                label='First Name'
+                                placeholder='Enter your first name'
+                                onChange={(e) => setFirstName(e.target.value)}
+                            />
+                            <Form.Input
+                                label='Last Name'
+                                placeholder='Enter your last name'
+                                onChange={(e) => setLastName(e.target.value)}
+                            />
+                            <Form.Input
+                                label='Email'
+                                placeholder='Enter your email'
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <Form.Input
+                                label='Phone Number'
+                                placeholder='Enter your phone number'
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                            />
+                            <Form.Input
+                                label='Describe your issue'
+                                placeholder='Describe your issue'
+                                value={issueDescription}
+                                onChange={(e) => setIssueDescription(e.target.value)}
+                            />
+
+                            <Button color='blue' onClick={handleApplyLoginChanges}>Submit Ticket</Button>
+
+                            {errorMessage && (
+                                <Message error content={errorMessage} />
+                            )}
+                            {successMessage && (
+                                <Message success content={successMessage} />
+                            )}
+                        </Form>
                     )}
                 
                 </Grid.Column>
