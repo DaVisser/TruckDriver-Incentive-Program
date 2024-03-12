@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import './ApplicationPage.css';
+=======
+>>>>>>> e36293a8d9bd7cc64c9913704b6f6546da29bbd6
 
 function TruckDriverProfile() {
   const [displaySection, setDisplaySection] = useState('updateProfile');
@@ -12,12 +15,20 @@ function TruckDriverProfile() {
   const [licenseID, setLicenseID] = useState('');
   const [sponsor, setSponsor] = useState('');
 
+<<<<<<< HEAD
 
   return (
     <div>
       <header className="header">
         <h4>Driver Applications</h4>
       </header>
+=======
+  // Here you can use useEffect or any other mechanism to fetch and set driverInfo
+
+  return (
+    <div>
+      <h1>Truck Driver Applications</h1>
+>>>>>>> e36293a8d9bd7cc64c9913704b6f6546da29bbd6
       <button onClick={() => setDisplaySection('submitApplication')}>Create New Application</button>
       <button onClick={() => setDisplaySection('viewPreviousApplications')}>View Previous Applications</button>
 
@@ -71,6 +82,10 @@ function TruckDriverProfile() {
 
       {displaySection === 'viewPreviousApplications' && (
         <div>
+<<<<<<< HEAD
+=======
+          {/* Placeholder for viewing previous applications */}
+>>>>>>> e36293a8d9bd7cc64c9913704b6f6546da29bbd6
           <p>View Previous Applications Section</p>
         </div>
       )}
@@ -78,4 +93,8 @@ function TruckDriverProfile() {
   );
 }
 
+<<<<<<< HEAD
 export default TruckDriverProfile;
+=======
+export default TruckDriverProfile;
+>>>>>>> e36293a8d9bd7cc64c9913704b6f6546da29bbd6
