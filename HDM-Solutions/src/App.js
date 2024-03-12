@@ -8,13 +8,13 @@ import {
 import { Amplify } from "aws-amplify";
 import awsExports from './aws-exports';
 import './App.css'
-import { AmplifySignOut, withAuthenticator } from '@aws-amplify/ui-react';
 import { Authenticator, useAuthenticator, View, Button, Heading, TextField, useTheme, Image, Text } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import HomePage from "./Components/HomePage/HomePage.jsx";
 import AboutPage from './Components/AboutPage/AboutPage.jsx';
 import ProfilePage from './Components/ProfilePage/ProfilePage.jsx';
 import ProductCatalog from './Components/ProductCatalog/ProductCatalog.jsx';
+import ApplicationPage from './Components/ApplicationPage/ApplicationPage.jsx';
 import hdmsolutionslogo from './Components/Assets/hdm-solutions-logo.jpg';
 
 
@@ -292,6 +292,7 @@ const components = {
                                 <Link to="/about">About</Link>
                                 <Link to="/profile">Profile</Link>
                                 <Link to="/catalog">Catalog</Link>
+                                <Link to="/application">Application</Link>
                             </div>
                             <div className="nav-signout">
                                 <button onClick={signOut}>Sign out</button>
@@ -302,6 +303,7 @@ const components = {
                             <Route path="/about" element={<AboutPage />} />
                             <Route path="/profile" element={<ProfilePage />} />
                             <Route path="/catalog" element={<ProductCatalog />} />
+                            <Route path="/application" element={<ApplicationPage />} />
                         </Routes>
                     </div>
                 </Router>
