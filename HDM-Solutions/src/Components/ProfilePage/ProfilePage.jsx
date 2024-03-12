@@ -212,9 +212,9 @@ const ProfilePage = () => {
                             )}
                         </Form>
                     )}
-                    
+
                     {displaySection === 'deleteAccount' && (
-                        <>
+                        <div style={{ textAlign: 'center' }}>
                             <p>Are you sure you want to delete your account?</p>
                             <Form>
                                 <Form.Input
@@ -230,10 +230,10 @@ const ProfilePage = () => {
                                     value={currentPassword}
                                     onChange={(e) => setCurrentPassword(e.target.value)}
                                 />
-                    
+
                                 <Button color='red' onClick={handleDeleteConfirmation}>Delete Account</Button>
                                 <Button color='red' onClick={handleDeleteConfirmation}>Cancel</Button>
-                    
+
                                 {errorMessage && (
                                     <Message error content={errorMessage} />
                                 )}
@@ -241,7 +241,7 @@ const ProfilePage = () => {
                                     <Message success content={successMessage} />
                                 )}
                             </Form>
-                        </>
+                        </div>
                     )}
 
                     {displaySection === 'submitTicket' && (
@@ -266,11 +266,12 @@ const ProfilePage = () => {
                                 placeholder='Enter your phone number'
                                 onChange={(e) => setPhoneNumber(e.target.value)}
                             />
-                            <Form.Input
+                            <Form.TextArea
                                 label='Describe your issue'
                                 placeholder='Describe your issue'
                                 value={issueDescription}
                                 onChange={(e) => setIssueDescription(e.target.value)}
+                                rows={4}
                             />
 
                             <Button color='blue' onClick={handleApplyLoginChanges}>Submit Ticket</Button>

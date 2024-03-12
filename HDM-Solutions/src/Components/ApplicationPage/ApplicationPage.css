@@ -1,3 +1,4 @@
+/* Header styles */
 .header {
   text-align: center;
   color: #00a2ff;
@@ -5,8 +6,9 @@
   font-size: 24px;
 }
 
+/* Button styles */
 button {
-  background-color: #00a2ff;
+  background-color: #4CAF50; /* Updated button color */
   color: white;
   border: none;
   border-radius: 4px;
@@ -16,9 +18,10 @@ button {
 }
 
 button:hover {
-  background-color: #007bbd;
+  background-color: #45a049; /* Darker shade on hover */
 }
 
+/* Form styles */
 form {
   max-width: 400px;
   margin: 0 auto;
@@ -27,11 +30,13 @@ form {
   border-radius: 5px;
 }
 
+/* Label styles */
 label {
   display: block;
   margin-bottom: 10px;
 }
 
+/* Input and select styles */
 input[type='text'],
 input[type='email'],
 input[type='date'],
@@ -51,13 +56,14 @@ select {
   border-radius: 4px;
   margin-bottom: 10px;
   appearance: none; /* Removes default dropdown arrow */
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2300a2ff' class='bi bi-caret-down-fill' viewBox='0 0 16 16'%3e%3cpath d='M3.232 5h9.536L8 9.982 3.232 5z'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2300a2ff' class='bi bi-caret-down-fill' viewBox='0 0 16 16'%3e%3cpath d='M3.232 5h9.536L8 9.982 3.232 5z'/%3e%3c/svg%3e"); /* Adds custom dropdown arrow */
   background-repeat: no-repeat;
   background-position: right 8px center;
 }
 
+/* Submit button styles */
 button[type='submit'] {
-  background-color: #00a2ff;
+  background-color: #4CAF50; /* Updated button color */
   color: white;
   border: none;
   border-radius: 4px;
@@ -67,7 +73,7 @@ button[type='submit'] {
 }
 
 button[type='submit']:hover {
-  background-color: #007bbd;
+  background-color: #45a049; /* Darker shade on hover */
 }
 
 /* Adjust styles as needed */
