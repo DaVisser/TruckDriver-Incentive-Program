@@ -173,7 +173,6 @@ const ProfilePage = () => {
                             <Form.Input
                                 label='Email'
                                 placeholder='Enter your email'
-                                //value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                             <Form.Input
@@ -186,7 +185,6 @@ const ProfilePage = () => {
                             <Form.Input
                                 label='Email'
                                 placeholder='Enter your new email'
-                                //value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                             <Form.Input
@@ -222,7 +220,6 @@ const ProfilePage = () => {
                                 <Form.Input
                                     label='Email'
                                     placeholder='Enter your email'
-                                    value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                                 <Form.Input
