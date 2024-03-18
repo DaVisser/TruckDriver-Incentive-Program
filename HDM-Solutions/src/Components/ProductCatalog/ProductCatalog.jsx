@@ -6,8 +6,9 @@ function ProductForm() {
     const [thumbnail, setThumbnail] = useState('');
     const [price, setPrice] = useState('');
     const [sponsorName, setSponsorName] = useState('');
-    const [showForm, setShowForm] = useState(false); // State to control the visibility of the form
+    const [showForm, setShowForm] = useState(false);
     const [products, setProducts] = useState([]);
+    const [artistInfo, setArtistInfo] = useState(null);
 
     useEffect(() => {
         fetchProducts();
@@ -32,13 +33,11 @@ function ProductForm() {
                 sponsorName
             });
             alert('Product inserted successfully');
-            // Reset form fields after successful submission
             setProductName('');
             setThumbnail('');
             setPrice('');
             setSponsorName('');
-            setShowForm(false); // Hide the form after successful submission
-            // Fetch updated products after insertion
+            setShowForm(false);
             fetchProducts();
         } catch (error) {
             console.error('Error inserting product:', error);
@@ -47,7 +46,18 @@ function ProductForm() {
     };
 
     const handleButtonClick = () => {
-        setShowForm(true); // Show the form when the button is clicked
+        setShowForm(true);
+    };
+
+    const fetchArtistInfo = async () => {
+        try {
+            const response = await axios.get('https://v4uv8d5ane.execute-api.us-east-1.amazonaws.com/dev/root', {
+                params: { amgArtistId: 468749 }
+            });
+            setArtistInfo(response.data);
+        } catch (error) {
+            console.error('Error fetching artist info:', error);
+        }
     };
 
     return (
@@ -113,13 +123,21 @@ function ProductForm() {
                     ))}
                 </ul>
             </div>
-            {/* Integrate PointsToDollarsGrid component */}
             <PointsToDollarsGrid />
+            <button onClick={fetchArtistInfo} style={buttonStyle}>Fetch Available Songs</button>
+            {artistInfo && (
+                <div>
+                    <h3>Artist Information</h3>
+                    <p>Name: {artistInfo.results[0].artistName}</p>
+                    <p>Genre: {artistInfo.results[0].primaryGenreName}</p>
+                    <p>Song: {artistInfo.results[1].trackName}</p>
+                    <p>Price: ${artistInfo.results[11].collectionPrice}</p>
+                </div>
+            )}
         </div>
     );
 }
 
-// Points to Dollars Ratio Grid Component
 function PointsToDollarsGrid() {
     return (
         <div>
@@ -144,14 +162,12 @@ function PointsToDollarsGrid() {
                         <td style={dataStyle}>100</td>
                         <td style={dataStyle}>$1.00</td>
                     </tr>
-                    {/* Add more rows as needed */}
                 </tbody>
             </table>
         </div>
     );
 }
 
-// Styles
 const buttonStyle = {
     backgroundColor: '#4CAF50',
     border: 'none',
