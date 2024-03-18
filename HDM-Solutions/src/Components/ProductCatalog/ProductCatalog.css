@@ -152,3 +152,168 @@
     top: 10px;
     right: 10px;
 }
+.artist-section {
+    margin-bottom: 20px;
+}
+
+.artist-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.songs-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.song-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.song-image {
+    width: 100%;
+    height: auto;
+}
+
+.song-info {
+    padding: 10px;
+    text-align: center;
+}
+
+.song-title {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.song-artist {
+    font-size: 14px;
+    color: #666;
+}
+
+.song-price {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.points-to-dollars-grid {
+    margin-bottom: 20px;
+}
+
+.points-to-dollars-grid h2 {
+    margin-bottom: 10px;
+}
+
+.points-to-dollars-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.points-to-dollars-table th,
+.points-to-dollars-table td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.songs-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.song-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.song-image {
+    width: 100%;
+    height: auto;
+}
+
+.song-info {
+    padding: 10px;
+    text-align: center;
+}
+
+.song-title {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.song-artist {
+    font-size: 14px;
+    color: #666;
+}
+
+.song-price {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.add-to-cart-btn {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #45a049;
+}
+
+.cart {
+    margin-top: 20px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.cart-total {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.price-filter {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.price-filter label {
+    margin-right: 10px;
+}
+
+.price-filter input {
+    margin-right: 20px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.songs-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+
