@@ -6,6 +6,8 @@ const ProfilePage = () => {
     const [displaySection, setDisplaySection] = useState('profile');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    
+    const [tempEmail, setTempEmail] = useState('');
     const [email, setEmail] = useState('');
     const [birthdate, setBirthdate] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -59,21 +61,26 @@ const ProfilePage = () => {
     }, [userInfo]);
     
     async function handleVertification(){
-        const email = 'email';
         try {
-            //await confirmUserAttribute(email, vertificationCode);
-            await confirmUserAttribute({ email, vertificationCode });
-            //await confirmUserAttribute(email, vertificationCode);
+            const input = {
+                confirmationCode: vertificationCode,
+                userAttributeKey: 'email'
+            };
+            await confirmUserAttribute(input);
+            
             console.log('Successfully confirmed user attributes');
+            driverInfo.email = email;
+            setVertificationCode('');
           } catch (error) {
+            setVertificationCode('');
             console.log(error);
-            console.log('Inputted Code: ', vertificationCode);
+            setErrorMessage('Email already registered or invalid code.');
           }
     }
     
 
     const back = () =>{
-        setDisplaySection('profile')
+        setDisplaySection('profile');
     };
     const handleUpdateProfile = () => {
         setDisplaySection('updateProfile');
@@ -100,7 +107,6 @@ const ProfilePage = () => {
     const handleApplyProfileChanges = async () => {
         try{
             //Updates info using a congito given function to update attributes in Congito Userpool.
-            //Current having issues with email due to verification concerns.
             const attributes = await updateUserAttributes({
                 userAttributes: {
                   email: email,
@@ -112,6 +118,15 @@ const ProfilePage = () => {
                   "custom:LicenseID" : licenseID,
                 },
               });
+              for (const key in attributes) {
+                const curr = attributes[key];
+                if(!curr.isUpdated){
+                        console.log('The following attribute needs further approval to update: ', key ,curr);
+                        setDisplaySection('emailVertification');
+                }
+              }
+              console.log('Response from Update: ', attributes);
+
               //Update info to diplay
               driverInfo.LicenseID = licenseID;
               driverInfo.given_name = firstName;
@@ -121,7 +136,7 @@ const ProfilePage = () => {
               driverInfo.gender = gender;
             setSuccessMessage('Profile changes applied successfully.');
         }catch(error){
-            setSuccessMessage('Unable to update profile due to unknown error. Try again later.');
+            setErrorMessage('Unable to update profile due to unknown error. Try again later.');
             console.log(error);
         }
         
@@ -180,6 +195,13 @@ const ProfilePage = () => {
                                     onChange={(e) => setVertificationCode(e.target.value)}
                                 />
                                 <Button color='blue' onClick={handleVertification}>Submit Code</Button>
+                                <Button color='blue' onClick={back}>Back</Button>
+                            {errorMessage && (
+                                <Message error content={errorMessage} />
+                            )}
+                            {successMessage && (
+                                <Message success content={successMessage} />
+                            )}
                             </Form>
                         </>
                     )}
