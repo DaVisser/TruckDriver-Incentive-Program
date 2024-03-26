@@ -71,6 +71,7 @@ const ProfilePage = () => {
             console.log('Successfully confirmed user attributes');
             driverInfo.email = email;
             setVertificationCode('');
+            setDisplaySection('profile');
           } catch (error) {
             setVertificationCode('');
             console.log(error);
