@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Header, Segment, Button, Form, Message, Image } from 'semantic-ui-react';
-import { getCurrentUser } from 'aws-amplify/auth';
+import { getCurrentUser, fetchUserAttributes, updateUserAttributes, confirmUserAttribute, verifyCurrentUserAttributeSubmit} from 'aws-amplify/auth';
 
 const ProfilePage = () => {
     const [displaySection, setDisplaySection] = useState('profile');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    
+    const [tempEmail, setTempEmail] = useState('');
     const [email, setEmail] = useState('');
     const [birthdate, setBirthdate] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -16,8 +18,11 @@ const ProfilePage = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+
+    const [vertificationCode, setVertificationCode] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
-    const [userInfo, setUserInfo] = useState([]);
+    //const [testUserInfo, setTestUserInfo] = useState(Object);
+    const [userInfo, setUserInfo] = useState(Object);
     const [driverInfo, setDriverInfo] = useState({
         given_name: 'test',
         family_name: '',
@@ -29,25 +34,12 @@ const ProfilePage = () => {
         Role: '',
         Application_Status: 'Pending'
     });
+
     const fetchUserInfo = async () => {
         try {
-            const userSession = await getCurrentUser();
-            const userId = userSession.userId;
-          const response = await fetch('https://7u2pt3y8zd.execute-api.us-east-1.amazonaws.com/prod/UserInfo',{
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${userId}`,
-            },
-          });
-          const data = await response.json();
-          if (data.length > 0) {
-            // Assuming data is an array of users, and you're interested in the first one
-            const user = data[0];
-            console.log('Fetched user:', user); // Inspect the user
-            setUserInfo(user); // Save the user object to state
-            } else {
-                console.log('No user data returned');
-            }
+            //Congito Provides function to call user info. So we switched from API call to this instead.
+            const userAttr = await fetchUserAttributes();
+            setUserInfo(userAttr);  
         } catch (error) {
           console.error('Error fetching user info:', error);
         }
@@ -57,18 +49,40 @@ const ProfilePage = () => {
       }, []);
       useEffect(() => {
         setDriverInfo({
-            given_name: userInfo.FirstName || '',
-            family_name: userInfo.LastName || '',
-            email: userInfo.Email || '',
-            birthdate: userInfo.DateOfBirth ? userInfo.DateOfBirth.split("T")[0] : '',
-            phone_number: userInfo.PhoneNumber || '',
-            gender: userInfo.Gender || '',
-            LicenseID: userInfo.TruckingLicense || '',
-            Role: userInfo.Role || '',
+            given_name: userInfo.given_name || '',
+            family_name: userInfo.family_name || '',
+            email: userInfo.email || '',
+            birthdate: userInfo.birthdate || '',
+            phone_number: userInfo.phone_number || '',
+            gender: userInfo.gender || '',
+            LicenseID: userInfo['custom:LicenseID'] || '',
+            Role: userInfo['custom:Role'] || '',
         });
     }, [userInfo]);
     
+    async function handleVertification(){
+        try {
+            const input = {
+                confirmationCode: vertificationCode,
+                userAttributeKey: 'email'
+            };
+            await confirmUserAttribute(input);
+            
+            console.log('Successfully confirmed user attributes');
+            driverInfo.email = email;
+            setVertificationCode('');
+            setDisplaySection('profile');
+          } catch (error) {
+            setVertificationCode('');
+            console.log(error);
+            setErrorMessage('Email already registered or invalid code.');
+          }
+    }
+    
 
+    const back = () =>{
+        setDisplaySection('profile');
+    };
     const handleUpdateProfile = () => {
         setDisplaySection('updateProfile');
         setFirstName(driverInfo.given_name);
@@ -91,15 +105,42 @@ const ProfilePage = () => {
         clearErrorMessages();
     };
 
-    const handleApplyProfileChanges = () => {
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setBirthdate('');
-        setPhoneNumber('');
-        setGender('');
-        setLicenseID('');
-        setSuccessMessage('Profile changes applied successfully.');
+    const handleApplyProfileChanges = async () => {
+        try{
+            //Updates info using a congito given function to update attributes in Congito Userpool.
+            const attributes = await updateUserAttributes({
+                userAttributes: {
+                  email: email,
+                  gender: gender,
+                  family_name: firstName,
+                  given_name: lastName,
+                  birthdate: birthdate,
+                  phone_number: phoneNumber,
+                  "custom:LicenseID" : licenseID,
+                },
+              });
+              for (const key in attributes) {
+                const curr = attributes[key];
+                if(!curr.isUpdated){
+                        console.log('The following attribute needs further approval to update: ', key ,curr);
+                        setDisplaySection('emailVertification');
+                }
+              }
+              console.log('Response from Update: ', attributes);
+
+              //Update info to diplay
+              driverInfo.LicenseID = licenseID;
+              driverInfo.given_name = firstName;
+              driverInfo.family_name = lastName;
+              driverInfo.birthdate = birthdate;
+              driverInfo.phone_number = phoneNumber;
+              driverInfo.gender = gender;
+            setSuccessMessage('Profile changes applied successfully.');
+        }catch(error){
+            setErrorMessage('Unable to update profile due to unknown error. Try again later.');
+            console.log(error);
+        }
+        
     };
 
     const handleApplyLoginChanges = () => {
@@ -145,6 +186,26 @@ const ProfilePage = () => {
                     <Button color='blue' onClick={handleUpdateProfile}>Update Profile</Button>
                     <Button color='green' onClick={handleEditLoginInfo}>Edit Login Info</Button>
                     <Button color='red' onClick={handleDeleteAccount}>Delete Account</Button>
+                    {displaySection === 'emailVertification' && (
+                        <>
+                            <Form>
+                                <Form.Input
+                                    label='Code'
+                                    placeholder='Enter Code sent to the email'
+                                    value={vertificationCode}
+                                    onChange={(e) => setVertificationCode(e.target.value)}
+                                />
+                                <Button color='blue' onClick={handleVertification}>Submit Code</Button>
+                                <Button color='blue' onClick={back}>Back</Button>
+                            {errorMessage && (
+                                <Message error content={errorMessage} />
+                            )}
+                            {successMessage && (
+                                <Message success content={successMessage} />
+                            )}
+                            </Form>
+                        </>
+                    )}
 
                     {displaySection === 'profile' && (
                         <>
@@ -206,7 +267,7 @@ const ProfilePage = () => {
                             />
 
                             <Button color='blue' onClick={handleApplyProfileChanges}>Apply Changes</Button>
-
+                            <Button color='blue' onClick={back}>Back</Button>
                             {errorMessage && (
                                 <Message error content={errorMessage} />
                             )}
