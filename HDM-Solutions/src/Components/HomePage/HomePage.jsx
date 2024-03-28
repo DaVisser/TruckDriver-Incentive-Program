@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './HomePage.css';
-import { getCurrentUser } from 'aws-amplify/auth'; // Make sure to import getCurrentUser
+import { getCurrentUser } from 'aws-amplify/auth';
 
 const HomePage = ({ user }) => {
-  const driverScore = 88;
+  const [driverScore, setdriverScore] = useState();
   const upcomingRoutes = [
     { date: '2024-03-10', destination: 'Los Angeles' },
     { date: '2024-03-12', destination: 'San Francisco' },
@@ -13,6 +13,24 @@ const HomePage = ({ user }) => {
 
   const [loginEvents, setLoginEvents] = useState([]);
   const [userInfo, setUserInfo] = useState({});
+
+  const fetchPoints = async () => {
+    try {
+        const userSession = await getCurrentUser();
+        const userId = userSession.userId;
+      const response = await fetch('https://7u2pt3y8zd.execute-api.us-east-1.amazonaws.com/prod/UserInfo',{
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${userId}`,
+        },
+      });
+      const data = await response.json();
+      const points = data[0];
+      setdriverScore(points.Points);
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
 
   const fetchLoginEvents = async () => {
     try {
@@ -45,6 +63,11 @@ const HomePage = ({ user }) => {
   };
 
   useEffect(() => {
+    fetchPoints();
+  }, []);
+
+  useEffect(() => {
+    console.log('Current user:', user); // Check if user info is available
     fetchLoginEvents();
     fetchUserInfo();
   }, []);
