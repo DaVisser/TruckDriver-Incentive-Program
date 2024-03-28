@@ -17,7 +17,7 @@ import ProductCatalog from './Components/ProductCatalog/ProductCatalog.jsx';
 import ApplicationPage from './Components/ApplicationPage/ApplicationPage.jsx';
 import OurSponsors from './Components/OurSponsors/OurSponsors.jsx';
 import hdmsolutionslogo from './Components/Assets/hdm-solutions-logo.jpg';
-import Cart from './Components/ProductCatalog/Cart.jsx'
+import Cart from './Components/ProductCatalog/Cart.jsx';
 
 Amplify.configure(awsExports)
 
@@ -294,6 +294,7 @@ const components = {
                                 <Link to="/profile">Profile</Link>
                                 <Link to="/catalog">Catalog</Link>
                                 <Link to="/application">Application</Link>
+                                <Link to="/cart">Cart</Link>
                                 <Link to="/sponsors">OurSponsors</Link>
                             </div>
                             <div className="nav-signout">
@@ -306,6 +307,7 @@ const components = {
                             <Route path="/profile" element={<ProfilePage />} />
                             <Route path="/catalog" element={<ProductCatalog />} />
                             <Route path="/application" element={<ApplicationPage />} />
+                            <Route path="/cart" element={<Cart />} />
                             <Route path="/sponsors" element={<OurSponsors />} />
                         </Routes>
                     </div>
