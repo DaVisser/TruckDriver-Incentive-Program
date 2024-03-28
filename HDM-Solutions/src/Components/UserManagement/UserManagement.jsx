@@ -8,7 +8,7 @@ const UserManagement = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch('https://cqf7mwevac.execute-api.us-east-1.amazonaws.com/dev/users'); // Replace INVOKE_URL_HERE with your actual invoke URL
+            const response = await fetch('https://cqf7mwevac.execute-api.us-east-1.amazonaws.com/dev/users');
             const data = await response.json();
             setUsers(data);
         } catch (error) {

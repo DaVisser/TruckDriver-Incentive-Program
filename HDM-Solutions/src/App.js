@@ -10,7 +10,7 @@ import awsExports from './aws-exports';
 import './App.css'
 import { Authenticator, useAuthenticator, View, Button, Heading, TextField, useTheme, Image, Text } from '@aws-amplify/ui-react';
 import { useEffect, useState } from 'react';
-import { fetchUserAttributes } from 'aws-amplify/auth';
+import { getCurrentUser, fetchUserAttributes, updateUserAttributes, confirmUserAttribute, verifyCurrentUserAttributeSubmit} from 'aws-amplify/auth';
 import '@aws-amplify/ui-react/styles.css';
 import HomePage from "./Components/HomePage/HomePage.jsx";
 import AboutPage from './Components/AboutPage/AboutPage.jsx';
@@ -285,46 +285,41 @@ const components = {
   };
 
   export default function App() {
-    const [userEmail, setUserEmail] = useState('');
-    const [isAdmin, setIsAdmin] = useState('false');
-    const [JSONresponse, setJSONresponse] = useState('');
-
+    const [userName, setUserName] = useState('');
+    const [userRole, setUserRole] = useState('');
   
     useEffect(() => {
-      const getUserEmail = async () => {
+      const getUserName = async () => {
         try {
-          const attributes = await fetchUserAttributes();
-          const emailAttribute = attributes.email;
-          if (emailAttribute) {
-            setUserEmail(emailAttribute.Value);
-          }
+          const attributes = await getCurrentUser();
+          const username = attributes.username;
+
+          setUserName(username);
+          console.log('Current Username: ', userName);
         } catch (error) {
-          console.error('Error fetching user email:', error);
+          console.error('Error fetching user name:', error);
         }
       };
-  
-      getUserEmail();
+      getUserName();
     }, []);
   
     useEffect(() => {
       const checkUserRole = async () => {
         try {
-          const response = await fetch(`https://1hmxcygemd.execute-api.us-east-1.amazonaws.com/dev/user?email=${encodeURIComponent(userEmail)}`);
+          console.log(userName);
+          const response = await fetch(`https://1hmxcygemd.execute-api.us-east-1.amazonaws.com/dev/user?username=` + userName);
+          console.log('response', response);
           const data = await response.json();
-          setJSONresponse(data);
-          setIsAdmin(data.role === 'admin');
+          console.log(data);
+          setUserRole(data);
         } catch (error) {
           console.error('Error checking user role:', error);
         }
       };
-  
-      if (userEmail) {
+      if (userName) {
         checkUserRole();
       }
-    }, [userEmail]);
-    
-    console.log('isAdmin is ', isAdmin);
-    console.log('data is ', JSONresponse);
+    }, [userName]);
   
     return (
       <Authenticator formFields={formFields} components={components}>
@@ -339,7 +334,7 @@ const components = {
                   <Link to="/catalog">Catalog</Link>
                   <Link to="/application">Application</Link>
                   <Link to="/cart">Cart</Link>
-                  {isAdmin && <Link to="/user-management">User Management</Link>}
+                  <Link to="/user-management">User Management</Link>
                 </div>
                 <div className="nav-signout">
                   <button onClick={signOut}>Sign out</button>
@@ -352,7 +347,7 @@ const components = {
                 <Route path="/catalog" element={<ProductCatalog />} />
                 <Route path="/application" element={<ApplicationPage />} />
                 <Route path="/cart" element={<Cart />} />
-                {isAdmin && <Route path="/user-management" element={<UserManagement />} />}
+                {userRole === 'Admin' && <Route path="/user-management" element={<UserManagement />} />}
               </Routes>
             </div>
           </Router>
