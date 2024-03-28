@@ -1,6 +1,7 @@
 // src/Components/UserManagement/UserManagement.jsx
 import React, { useState, useEffect } from 'react';
 import './UserManagement.css';
+import { getCurrentUser, fetchUserAttributes, updateUserAttributes, confirmUserAttribute, verifyCurrentUserAttributeSubmit} from 'aws-amplify/auth';
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);

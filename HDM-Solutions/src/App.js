@@ -9,12 +9,16 @@ import { Amplify } from "aws-amplify";
 import awsExports from './aws-exports';
 import './App.css'
 import { Authenticator, useAuthenticator, View, Button, Heading, TextField, useTheme, Image, Text } from '@aws-amplify/ui-react';
+import { useEffect, useState } from 'react';
+import { fetchUserAttributes } from 'aws-amplify/auth';
 import '@aws-amplify/ui-react/styles.css';
 import HomePage from "./Components/HomePage/HomePage.jsx";
 import AboutPage from './Components/AboutPage/AboutPage.jsx';
 import ProfilePage from './Components/ProfilePage/ProfilePage.jsx';
 import ProductCatalog from './Components/ProductCatalog/ProductCatalog.jsx';
 import ApplicationPage from './Components/ApplicationPage/ApplicationPage.jsx';
+import UserManagement from './Components/UserManagement/UserManagement.jsx';
+
 import hdmsolutionslogo from './Components/Assets/hdm-solutions-logo.jpg';
 import Cart from './Components/ProductCatalog/Cart.jsx'
 
@@ -279,38 +283,81 @@ const components = {
       },
     },
   };
-  
+
   export default function App() {
+    const [userEmail, setUserEmail] = useState('');
+    const [isAdmin, setIsAdmin] = useState('false');
+    const [JSONresponse, setJSONresponse] = useState('');
+
+  
+    useEffect(() => {
+      const getUserEmail = async () => {
+        try {
+          const attributes = await fetchUserAttributes();
+          const emailAttribute = attributes.email;
+          if (emailAttribute) {
+            setUserEmail(emailAttribute.Value);
+          }
+        } catch (error) {
+          console.error('Error fetching user email:', error);
+        }
+      };
+  
+      getUserEmail();
+    }, []);
+  
+    useEffect(() => {
+      const checkUserRole = async () => {
+        try {
+          const response = await fetch(`https://1hmxcygemd.execute-api.us-east-1.amazonaws.com/dev/user?email=${encodeURIComponent(userEmail)}`);
+          const data = await response.json();
+          setJSONresponse(data);
+          setIsAdmin(data.role === 'admin');
+        } catch (error) {
+          console.error('Error checking user role:', error);
+        }
+      };
+  
+      if (userEmail) {
+        checkUserRole();
+      }
+    }, [userEmail]);
+    
+    console.log('isAdmin is ', isAdmin);
+    console.log('data is ', JSONresponse);
+  
     return (
-        <Authenticator formFields={formFields} components={components}>
-            {({ signOut }) => (
-                <Router>
-                    <div>
-                        <nav>
-                            <div className="nav-links">
-                                <Link to="/">Home</Link>
-                                <Link to="/about">About</Link>
-                                <Link to="/profile">Profile</Link>
-                                <Link to="/catalog">Catalog</Link>
-                                <Link to="/application">Application</Link>
-                                <Link to="/cart">Cart</Link>
-                            </div>
-                            <div className="nav-signout">
-                                <button onClick={signOut}>Sign out</button>
-                            </div>
-                        </nav>
-                        <Routes>
-                            <Route path="/" element={<HomePage />} />
-                            <Route path="/about" element={<AboutPage />} />
-                            <Route path="/profile" element={<ProfilePage />} />
-                            <Route path="/catalog" element={<ProductCatalog />} />
-                            <Route path="/application" element={<ApplicationPage />} />
-                            <Route path="/cart" element={<Cart />} />
-                            
-                        </Routes>
-                    </div>
-                </Router>
-            )}
-        </Authenticator>
+      <Authenticator formFields={formFields} components={components}>
+        {({ signOut }) => (
+          <Router>
+            <div>
+              <nav>
+                <div className="nav-links">
+                  <Link to="/">Home</Link>
+                  <Link to="/about">About</Link>
+                  <Link to="/profile">Profile</Link>
+                  <Link to="/catalog">Catalog</Link>
+                  <Link to="/application">Application</Link>
+                  <Link to="/cart">Cart</Link>
+                  {isAdmin && <Link to="/user-management">User Management</Link>}
+                </div>
+                <div className="nav-signout">
+                  <button onClick={signOut}>Sign out</button>
+                </div>
+              </nav>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/catalog" element={<ProductCatalog />} />
+                <Route path="/application" element={<ApplicationPage />} />
+                <Route path="/cart" element={<Cart />} />
+                {isAdmin && <Route path="/user-management" element={<UserManagement />} />}
+              </Routes>
+            </div>
+          </Router>
+        )}
+      </Authenticator>
     );
-}
+  }
+  
