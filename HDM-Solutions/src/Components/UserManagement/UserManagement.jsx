@@ -1,7 +1,8 @@
 // src/Components/UserManagement/UserManagement.jsx
 import React, { useState, useEffect } from 'react';
 import './UserManagement.css';
-import { adminDeleteUser, getCurrentUser, fetchUserAttributes, updateUserAttributes, confirmUserAttribute, verifyCurrentUserAttributeSubmit} from 'aws-amplify/auth';
+import deleteUser from './deleteUser.js'; // Adjust the path as necessary
+import { getCurrentUser} from 'aws-amplify/auth';
 
 
 const UserManagement = () => {
