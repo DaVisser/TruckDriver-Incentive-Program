@@ -1,7 +1,8 @@
 // src/Components/UserManagement/UserManagement.jsx
 import React, { useState, useEffect } from 'react';
 import './UserManagement.css';
-import { getCurrentUser, fetchUserAttributes, updateUserAttributes, confirmUserAttribute, verifyCurrentUserAttributeSubmit} from 'aws-amplify/auth';
+import { adminDeleteUser, getCurrentUser, fetchUserAttributes, updateUserAttributes, confirmUserAttribute, verifyCurrentUserAttributeSubmit} from 'aws-amplify/auth';
+
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
@@ -9,6 +10,13 @@ const UserManagement = () => {
     const [userRole, setUserRole] = useState('');
     const [isLoading, setIsLoading] = useState(true); // Assume loading by default
     const [isError, setIsError] = useState(false);
+    // in progress
+    const handleDelete = async (userId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete user " + userId + "?");
+        if (!confirmDelete) return;          
+          alert(userId + " deleted successfully"); // Temp alert, replace with your success handling
+      };
+    // in progress ^^^
 
     useEffect(() => {
       const getUserName = async () => {
@@ -49,7 +57,6 @@ const UserManagement = () => {
 
     useEffect(() => {
         if (userRole === 'Admin') {
-            // Fetch users only if the userRole is 'Admin'
             const fetchUsers = async () => {
                 try {
                     const response = await fetch('https://cqf7mwevac.execute-api.us-east-1.amazonaws.com/dev/users');
@@ -61,10 +68,11 @@ const UserManagement = () => {
             };
             fetchUsers();
         }
-    }, [userRole]); // Depend on userRole
+    }, [userRole]); 
 
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error occurred while fetching user role.</div>;
+    // Display users only if the userRole is 'Admin'
     if (userRole !== 'Admin') return <div>You are not authorized to view this page.</div>;
 
     return (
@@ -85,7 +93,7 @@ const UserManagement = () => {
                 <tbody>
                     {users.map(user => (
                         <tr key={user.UserId}>
-                            <td><button>Delete</button></td>
+                        <td><button onClick={() => handleDelete(user.UserName)}>Delete</button></td>
                             <td>{user.UserName}</td>
                             <td>{user.FirstName}</td>
                             <td>{user.LastName}</td>
