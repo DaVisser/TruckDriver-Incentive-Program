@@ -284,75 +284,81 @@ const components = {
     },
   };
 
-  export default function App() {
-    const [userName, setUserName] = useState('');
-    const [userRole, setUserRole] = useState('');
-  
-    useEffect(() => {
-      const getUserName = async () => {
-        try {
-          const attributes = await getCurrentUser();
-          const username = attributes.username;
+ export default function App() {
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
+  const [isLoading, setIsLoading] = useState(true); // Assume loading by default
+  const [isError, setIsError] = useState(false);
 
-          setUserName(username);
-          console.log('Current Username: ', userName);
-        } catch (error) {
-          console.error('Error fetching user name:', error);
-        }
-      };
-      getUserName();
-    }, []);
-  
-    useEffect(() => {
-      const checkUserRole = async () => {
-        try {
-          console.log(userName);
-          const response = await fetch(`https://1hmxcygemd.execute-api.us-east-1.amazonaws.com/dev/user?username=` + userName);
-          console.log('response', response);
-          const data = await response.json();
-          console.log(data);
-          setUserRole(data);
-        } catch (error) {
-          console.error('Error checking user role:', error);
-        }
-      };
-      if (userName) {
-        checkUserRole();
+  useEffect(() => {
+    const getUserName = async () => {
+      try {
+        const attributes = await getCurrentUser();
+        const username = attributes.username;
+
+        setUserName(username);
+      } catch (error) {
+        console.error('Error fetching user name:', error);
       }
-    }, [userName]);
-  
-    return (
-      <Authenticator formFields={formFields} components={components}>
-        {({ signOut }) => (
-          <Router>
-            <div>
-              <nav>
-                <div className="nav-links">
-                  <Link to="/">Home</Link>
-                  <Link to="/about">About</Link>
-                  <Link to="/profile">Profile</Link>
-                  <Link to="/catalog">Catalog</Link>
-                  <Link to="/application">Application</Link>
-                  <Link to="/cart">Cart</Link>
-                  <Link to="/user-management">User Management</Link>
-                </div>
-                <div className="nav-signout">
-                  <button onClick={signOut}>Sign out</button>
-                </div>
-              </nav>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/catalog" element={<ProductCatalog />} />
-                <Route path="/application" element={<ApplicationPage />} />
-                <Route path="/cart" element={<Cart />} />
-                {userRole === 'Admin' && <Route path="/user-management" element={<UserManagement />} />}
-              </Routes>
-            </div>
-          </Router>
-        )}
-      </Authenticator>
-    );
-  }
-  
+    };
+    getUserName();
+  }, []);
+
+  useEffect(() => {
+    const checkUserRole = async () => {
+      if (!userName) return; // Return early if userName is not set yet
+      
+      setIsLoading(true); // Begin loading
+      setIsError(false); // Reset error state
+      
+      try {
+        const response = await fetch(`https://1hmxcygemd.execute-api.us-east-1.amazonaws.com/dev/user?username=${userName}`);
+        const data = await response.json();
+        
+        setUserRole(data.role); // Assuming the API response has a 'role' field
+        setIsLoading(false); // Loading complete
+      } catch (error) {
+        console.error('Error checking user role:', error);
+        setIsError(true); // Set error state
+        setIsLoading(false); // Loading complete
+      }
+    };
+    checkUserRole();
+  }, [userName]);
+
+  return (
+    <Authenticator formFields={formFields} components={components}>
+      {({ signOut }) => (
+        <Router>
+          <div>
+            <nav>
+              <div className="nav-links">
+                <Link to="/">Home</Link>
+                <Link to="/about">About</Link>
+                <Link to="/profile">Profile</Link>
+                <Link to="/catalog">Catalog</Link>
+                <Link to="/application">Application</Link>
+                <Link to="/cart">Cart</Link>
+                {!isLoading && !isError && userRole === 'Admin' && <Link to="/user-management">User Management</Link>}
+              </div>
+              <div className="nav-signout">
+                <button onClick={signOut}>Sign out</button>
+              </div>
+            </nav>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/catalog" element={<ProductCatalog />} />
+              <Route path="/application" element={<ApplicationPage />} />
+              <Route path="/cart" element={<Cart />} />
+              {!isLoading && !isError && userRole === 'Admin' && <Route path="/user-management" element={<UserManagement />} />}
+            </Routes>
+            {isLoading && <div>Loading...</div>}
+            {isError && <div>Error occurred while fetching user data.</div>}
+          </div>
+        </Router>
+      )}
+    </Authenticator>
+  );
+}
