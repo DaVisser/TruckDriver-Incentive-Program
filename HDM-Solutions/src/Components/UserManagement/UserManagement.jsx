@@ -12,11 +12,22 @@ const UserManagement = () => {
     const [isLoading, setIsLoading] = useState(true); // Assume loading by default
     const [isError, setIsError] = useState(false);
     // in progress
-    const handleDelete = async (userId) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete user " + userId + "?");
-        if (!confirmDelete) return;          
-          alert(userId + " deleted successfully"); // Temp alert, replace with your success handling
-      };
+    // write a lambda function that disables a user in cognito
+    const handleDelete = async (username) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete " + username + "?");
+        if (!confirmDelete) return;
+    
+        try {
+            await deleteUser(username);
+            alert( username + " deleted successfully");
+    
+            // Refresh the users list by removing the deleted user
+            setUsers(users.filter(user => user.UserName !== username));
+        } catch (error) {
+            console.error("Error deleting user: ", error);
+            alert("Failed to delete " + username);
+        }
+    };
     // in progress ^^^
 
     useEffect(() => {
