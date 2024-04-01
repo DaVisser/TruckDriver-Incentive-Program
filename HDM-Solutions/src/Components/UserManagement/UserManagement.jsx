@@ -1,7 +1,6 @@
 // src/Components/UserManagement/UserManagement.jsx
 import React, { useState, useEffect } from 'react';
 import './UserManagement.css';
-import deleteUser from './deleteUser.js'; // Adjust the path as necessary
 import { getCurrentUser} from 'aws-amplify/auth';
 
 
@@ -13,21 +12,32 @@ const UserManagement = () => {
     const [isError, setIsError] = useState(false);
     // in progress
     // write a lambda function that disables a user in cognito
-    const handleDelete = async (username) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete " + username + "?");
-        if (!confirmDelete) return;
+    const handleDeactivate = async (username) => {
+        const confirmDeactivate = window.confirm(`Are you sure you want to deactivate ${username}?`);
+        if (!confirmDeactivate) return;
     
         try {
-            await deleteUser(username);
-            alert( username + " deleted successfully");
+            const response = await fetch('https://7ckucn4b35.execute-api.us-east-1.amazonaws.com/dev/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username, // Assuming your Lambda function expects a 'username' field in the body
+                    userPoolId: 'us-east-1_2qaCHCZk4' // Include the UserPoolId if necessary, or handle it within the Lambda
+                })
+            });
     
-            // Refresh the users list by removing the deleted user
+            if (!response.ok) throw new Error('Failed to deactivate user');
+            
+            const result = await response.json();
+            alert(result.message);
+    
+            // Refresh the users list by removing the deactivated user
             setUsers(users.filter(user => user.UserName !== username));
         } catch (error) {
-            console.error("Error deleting user: ", error);
-            alert("Failed to delete " + username);
+            console.error("Error deactivating user: ", error);
+            alert(`Failed to deactivate ${username}`);
         }
-    };
+    };    
     // in progress ^^^
 
     useEffect(() => {
@@ -94,7 +104,7 @@ const UserManagement = () => {
                 {/* Table headers and rows */}
                 <thead>
                     <tr>
-                        <th>Delete User</th>
+                        <th>De-Activate User</th>
                         <th>Username</th>
                         <th>First Name</th>
                         <th>Last Name</th>
@@ -105,7 +115,7 @@ const UserManagement = () => {
                 <tbody>
                     {users.map(user => (
                         <tr key={user.UserId}>
-                        <td><button onClick={() => handleDelete(user.UserName)}>Delete</button></td>
+                        <td><button onClick={() => handleDeactivate(user.UserName)}>De-Activate</button></td>
                             <td>{user.UserName}</td>
                             <td>{user.FirstName}</td>
                             <td>{user.LastName}</td>
