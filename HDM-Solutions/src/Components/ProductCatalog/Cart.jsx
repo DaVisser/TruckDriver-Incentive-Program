@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import './Cart.css';
 import { Link } from 'react-router-dom';
-import './Cart.css'; // Import the CSS file for the Cart component
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
@@ -10,6 +10,13 @@ function Cart() {
         setCartItems(cart);
     }, []);
 
+    const updateQuantity = (index, quantity) => {
+        const newCart = [...cartItems];
+        newCart[index].quantity = Math.max(1, quantity); // Ensure quantity is at least 1
+        setCartItems(newCart);
+        localStorage.setItem('cart', JSON.stringify(newCart));
+    };
+
     const removeFromCart = (index) => {
         const newCart = [...cartItems];
         newCart.splice(index, 1);
@@ -18,7 +25,7 @@ function Cart() {
     };
 
     const calculateTotal = (items) => {
-        return items.reduce((total, item) => total + item.collectionPrice, 0).toFixed(2);
+        return items.reduce((total, item) => total + (item.collectionPrice * item.quantity), 0).toFixed(2);
     };
 
     const checkout = () => {
@@ -28,14 +35,23 @@ function Cart() {
 
     return (
         <div className="cart">
-            <Link to="/catalog">Back to Product Catalog</Link>
+            <Link to="/catalog">Go to Catalog</Link>
             <h2>Cart</h2>
             <div className="cart-items">
                 {cartItems.map((item, index) => (
                     <div key={index} className="cart-item">
                         <div className="cart-item-info">
                             <div>{item.trackName} by {item.artistName}</div>
-                            <div>{item.collectionPrice*100} Points</div>
+                            <div><b>{item.collectionPrice*100} Points</b></div>
+                        </div>
+                        <div className="quantity-input">
+                            <button onClick={() => updateQuantity(index, item.quantity + 1)}>▲</button>
+                            <input
+                                type="number"
+                                value={item.quantity}
+                                onChange={(e) => updateQuantity(index, parseInt(e.target.value))}
+                            />
+                            <button onClick={() => updateQuantity(index, item.quantity - 1)}>▼</button>
                         </div>
                         <button className="remove-btn" onClick={() => removeFromCart(index)}>Remove</button>
                     </div>

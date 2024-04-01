@@ -41,7 +41,15 @@ function ProductCatalog() {
 
     const addToCart = (song) => {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        localStorage.setItem('cart', JSON.stringify([...cart, song]));
+        const index = cart.findIndex(item => item.trackId === song.trackId);
+
+        if (index > -1) {
+            cart[index].quantity += 1;
+        } else {
+            cart.push({ ...song, quantity: 1 });
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
     };
 
     return (
