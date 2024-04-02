@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ApplicationPage.css';
 
 function TruckDriverProfile() {
@@ -11,7 +11,54 @@ function TruckDriverProfile() {
   const [gender, setGender] = useState('');
   const [licenseID, setLicenseID] = useState('');
   const [sponsor, setSponsor] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
+  const [sponsorData, setSponsorData] = useState([]);
+  const [selectedSponsor, setSelectedSponsor] = useState(null);
+
+  useEffect(() => {
+    const fetchSponsorData = async () => {
+      try {
+        const response = await fetch('https://5tdz19ogqf.execute-api.us-east-1.amazonaws.com/default/team06-SponsorInformation');
+        if (response.ok) {
+          const data = await response.json();
+          setSponsorData(data); // Set sponsorData to the array
+        } else {
+          console.error('Failed to fetch sponsor data:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching sponsor data:', error);
+      }
+    };
+    fetchSponsorData();
+  }, []);
+
+  const handleSponsorChange = (event) => {
+    const selectedSponsorName = event.target.value;
+    const selectedSponsor = sponsorData.find(sponsor => sponsor.name === selectedSponsorName);
+    setSelectedSponsor(selectedSponsor);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Here you can add your submission logic, for example, submitting data to your backend
+    // After successful submission, set the success message
+    setSuccessMessage('Application submitted successfully!');
+    // You may also want to reset the form fields after submission
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setBirthdate('');
+    setPhoneNumber('');
+    setGender('');
+    setLicenseID('');
+    setSponsor('');
+    setSelectedSponsor(null);
+    // Reset success message after a delay
+    setTimeout(() => {
+      setSuccessMessage('');
+    }, 5000); // Clear success message after 5 seconds
+  };
 
   return (
     <div>
@@ -22,7 +69,7 @@ function TruckDriverProfile() {
       <button onClick={() => setDisplaySection('viewPreviousApplications')}>View Previous Applications</button>
 
       {displaySection === 'submitApplication' && (
-        <form>
+        <form onSubmit={handleSubmit}>
           <label>
             First Name:<br />
             <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
@@ -56,16 +103,19 @@ function TruckDriverProfile() {
             License ID:<br />
             <input type="text" value={licenseID} onChange={(e) => setLicenseID(e.target.value)} />
           </label><br />
-          <label>
-            Choose Sponsor:<br />
-            <select value={sponsor} onChange={(e) => setSponsor(e.target.value)}>
+          <div>
+            <p>Choose Sponsor:</p>
+            <select onChange={handleSponsorChange}>
               <option value="">Select</option>
-              <option value="sponsor1">Sponsor 1</option>
-              <option value="sponsor2">Sponsor 2</option>
-              <option value="sponsor3">Sponsor 3</option>
+              {Array.isArray(sponsorData) ? sponsorData.map((sponsor, index) => (
+                <option key={index} value={sponsor.name}>
+                  {sponsor.name}
+                </option>
+              )) : null}
             </select>
-          </label><br />
+          </div>
           <button type="submit">Submit</button>
+          {successMessage && <p className="success-message">{successMessage}</p>}
         </form>
       )}
 

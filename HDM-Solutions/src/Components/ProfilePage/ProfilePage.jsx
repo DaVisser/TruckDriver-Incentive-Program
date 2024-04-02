@@ -18,7 +18,7 @@ const ProfilePage = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-
+    const [issue, setissue] = useState('');
     const [vertificationCode, setVertificationCode] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
     //const [testUserInfo, setTestUserInfo] = useState(Object);
@@ -59,6 +59,33 @@ const ProfilePage = () => {
             Role: userInfo['custom:Role'] || '',
         });
     }, [userInfo]);
+
+        const handleTicketSubmission = async () => {
+            try {
+              const response = await fetch('https://hj691579y6.execute-api.us-east-1.amazonaws.com/default/team06-SupportTickets', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  firstName,
+                  lastName,
+                  phoneNumber,
+                  issue,
+                }),
+              });
+              console.log('API Response: ', response);
+              if (response.ok) {
+                setSuccessMessage('Support Ticket submitted successfully.');
+              } else {
+                const data = await response.json();
+                setErrorMessage(data.message || 'Failed to submit support ticket.');
+              }
+            } catch (error) {
+              console.error('Error submitting support ticket:', error);
+              setErrorMessage('Failed to submit support ticket.');
+            }
+        };
     
     async function handleVertification(){
         try {
@@ -102,6 +129,11 @@ const ProfilePage = () => {
 
     const handleDeleteAccount = () => {
         setDisplaySection('deleteAccount');
+        clearErrorMessages();
+    };
+
+    const handleSupportTicket = () => {
+        setDisplaySection('reportIssue');
         clearErrorMessages();
     };
 
@@ -165,6 +197,11 @@ const ProfilePage = () => {
         setSuccessMessage('Account deleted successfully.');
     };
 
+    const handleIssueTicket = () => {
+        handleTicketSubmission();
+        setSuccessMessage('Support Ticket submitted successfully.');
+    }
+
     const clearErrorMessages = () => {
         setErrorMessage('');
         setSuccessMessage('');
@@ -197,6 +234,7 @@ const ProfilePage = () => {
                     <Button color='blue' onClick={handleUpdateProfile}>Update Profile</Button>
                     <Button color='green' onClick={handlePasswordUpdate}>UpdatePassword</Button>
                     <Button color='red' onClick={handleDeleteAccount}>Delete Account</Button>
+                    <Button color='orange' onClick={handleSupportTicket}>Driver Issue Ticket</Button>
                     {displaySection === 'emailVertification' && (
                         <>
                             <Form>
@@ -344,6 +382,48 @@ const ProfilePage = () => {
 
                                 <Button color='red' onClick={handleDeleteConfirmation}>Delete Account</Button>
                                 <Button color='red' onClick={handleDeleteConfirmation}>Cancel</Button>
+
+                                {errorMessage && (
+                                    <Message error content={errorMessage} />
+                                )}
+                                {successMessage && (
+                                    <Message success content={successMessage} />
+                                )}
+                            </Form>
+                        </>
+                    )}
+
+                    {displaySection === 'reportIssue' && (
+                        <>
+                            <p>Fill out the Support Ticket below to report any driver issues.</p>
+                            <Form>
+                                <Form.Input
+                                    label='First Name'
+                                    placeholder='Enter your First Name'
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
+                                />
+                                <Form.Input
+                                    label='Last Name'
+                                    placeholder='Enter your Last Name'
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                />
+                                <Form.Input
+                                    label='Phone Number'
+                                    placeholder='Enter your Phone Number'
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                />
+                                <Form.Input
+                                    label='Issue'
+                                    placeholder='Describe your issue'
+                                    value={issue}
+                                    onChange={(e) => setissue(e.target.value)}
+                                />
+
+                                <Button color='red' onClick={handleIssueTicket}>Submit Support Ticket</Button>
+                                <Button color='red' onClick={handleIssueTicket}>Cancel</Button>
 
                                 {errorMessage && (
                                     <Message error content={errorMessage} />
