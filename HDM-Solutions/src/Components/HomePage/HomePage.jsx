@@ -108,7 +108,10 @@ const HomePage = ({ user }) => {
         </section>
       )}
 
-      {/* Your footer */}
+      <footer className="footer">
+        <p>Contact us at support@truckapp.com</p>
+        {/* Additional footer content */}
+      </footer>
     </div>
   );
 };
