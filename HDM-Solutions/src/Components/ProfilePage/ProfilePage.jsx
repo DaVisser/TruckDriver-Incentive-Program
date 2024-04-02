@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Header, Segment, Button, Form, Message, Image } from 'semantic-ui-react';
-import { getCurrentUser, fetchUserAttributes, updateUserAttributes, confirmUserAttribute, verifyCurrentUserAttributeSubmit} from 'aws-amplify/auth';
+import { getCurrentUser, fetchUserAttributes, updateUserAttributes, confirmUserAttribute, updatePassword} from 'aws-amplify/auth';
 
 const ProfilePage = () => {
     const [displaySection, setDisplaySection] = useState('profile');
@@ -95,8 +95,8 @@ const ProfilePage = () => {
         clearErrorMessages();
     };
 
-    const handleEditLoginInfo = () => {
-        setDisplaySection('editLoginInfo');
+    const handlePasswordUpdate = () => {
+        setDisplaySection('updatePassword');
         clearErrorMessages();
     };
 
@@ -143,11 +143,22 @@ const ProfilePage = () => {
         
     };
 
-    const handleApplyLoginChanges = () => {
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-        setSuccessMessage('Login information updated successfully.');
+    const handleUpdatePasswordConfirm = async () => {
+        try{
+            const input = {
+                oldPassword: currentPassword,
+                newPassword: newPassword
+            };
+            if(confirmPassword != newPassword && currentPassword != confirmPassword){
+                setErrorMessage('Passwords do not match or new password matches current password.');
+            }else{
+
+                await updatePassword(input);
+                setSuccessMessage('Successfully updated Password');
+            }
+        }catch(error){
+            console.log(error);
+        }
     };
 
     const handleDeleteConfirmation = () => {
@@ -184,7 +195,7 @@ const ProfilePage = () => {
                     />
 
                     <Button color='blue' onClick={handleUpdateProfile}>Update Profile</Button>
-                    <Button color='green' onClick={handleEditLoginInfo}>Edit Login Info</Button>
+                    <Button color='green' onClick={handlePasswordUpdate}>UpdatePassword</Button>
                     <Button color='red' onClick={handleDeleteAccount}>Delete Account</Button>
                     {displaySection === 'emailVertification' && (
                         <>
@@ -277,26 +288,15 @@ const ProfilePage = () => {
                         </Form>
                     )}
 
-                    {displaySection === 'editLoginInfo' && (
+                    {displaySection === 'updatePassword' && (
                         <Form>
-                            <Form.Input
-                                label='Email'
-                                placeholder='Enter your email'
-                                //value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
+                            
                             <Form.Input
                                 label='Current Password'
                                 type='password'
                                 placeholder='Enter current password'
                                 value={currentPassword}
                                 onChange={(e) => setCurrentPassword(e.target.value)}
-                            />
-                            <Form.Input
-                                label='Email'
-                                placeholder='Enter your new email'
-                                //value={email}
-                                onChange={(e) => setEmail(e.target.value)}
                             />
                             <Form.Input
                                 label='New Password'
@@ -313,8 +313,8 @@ const ProfilePage = () => {
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
 
-                            <Button color='blue' onClick={handleApplyLoginChanges}>Apply Changes</Button>
-
+                            <Button color='blue' onClick={handleUpdatePasswordConfirm}>Update Password</Button>
+                            <Button color='blue' onClick={back}>Back</Button>
                             {errorMessage && (
                                 <Message error content={errorMessage} />
                             )}
