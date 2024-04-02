@@ -339,7 +339,7 @@ const components = {
                 <Link to="/catalog">Catalog</Link>
                 <Link to="/application">Application</Link>
                 <Link to="/cart">Cart</Link>
-                {!isLoading && !isError && userRole === 'Admin' && <Link to="/user-management">User Management</Link>}
+                {!isLoading && !isError && (userRole === 'Admin' || userRole === 'Sponsor') && <Link to="/user-management">User Management</Link>}
               </div>
               <div className="nav-signout">
                 <button onClick={signOut}>Sign out</button>
@@ -352,7 +352,7 @@ const components = {
               <Route path="/catalog" element={<ProductCatalog />} />
               <Route path="/application" element={<ApplicationPage />} />
               <Route path="/cart" element={<Cart />} />
-              {!isLoading && !isError && userRole === 'Admin' && <Route path="/user-management" element={<UserManagement />} />}
+              {!isLoading && !isError && (userRole === 'Admin' || userRole === 'Sponsor') && <Route path="/user-management" element={<UserManagement />} />}
             </Routes>
             {isLoading && <div>Loading...</div>}
             {isError && <div>Error occurred while fetching user data.</div>}

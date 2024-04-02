@@ -180,17 +180,18 @@ const handleCreateUser = async (e) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map(user => (
-                        <tr key={user.UserId}>
-                        <td><button onClick={() => handleDeactivate(user.UserName)}>De-Activate</button></td>
-                            <td>{user.UserName}</td>
-                            <td>{user.FirstName}</td>
-                            <td>{user.LastName}</td>
-                            <td>{user.Email}</td>
-                            <td>{user.Role}</td>
-                        </tr>
-                    ))}
-                </tbody>
+    {users.filter(user => userRole !== 'Admin' || user.Role !== 'Admin').map(user => (
+        <tr key={user.UserId}>
+            <td><button onClick={() => handleDeactivate(user.UserName)}>De-Activate</button></td>
+            <td>{user.UserName}</td>
+            <td>{user.FirstName}</td>
+            <td>{user.LastName}</td>
+            <td>{user.Email}</td>
+            <td>{user.Role}</td>
+        </tr>
+    ))}
+</tbody>
+
             </table>
         </div>
     );
