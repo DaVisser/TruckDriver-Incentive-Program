@@ -5,10 +5,10 @@ import './ProductCatalog.css';
 
 function ProductCatalog() {
     const [artistSongs, setArtistSongs] = useState([]);
-    const [minPoints, setMinPoints] = useState(0);
-    const [maxPoints, setMaxPoints] = useState(25000);
+    const [selectedArtist, setSelectedArtist] = useState('');
 
     const artistIds = {
+        'All Artists': '',
         'Drake': 271256,
         'Future': 128050210,
         '21 Savage': 894820464,
@@ -30,8 +30,10 @@ function ProductCatalog() {
         const fetchAllSongs = async () => {
             const allSongs = [];
             for (const artistId of Object.values(artistIds)) {
-                const songs = await fetchSongsForArtist(artistId);
-                allSongs.push(...songs);
+                if (artistId) {
+                    const songs = await fetchSongsForArtist(artistId);
+                    allSongs.push(...songs);
+                }
             }
             setArtistSongs(allSongs);
             localStorage.setItem('catalog', JSON.stringify(allSongs)); // Store catalog in localStorage
@@ -60,20 +62,30 @@ function ProductCatalog() {
 
     const addToCart = (song) => {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        localStorage.setItem('cart', JSON.stringify([...cart, song]));
+        const index = cart.findIndex(item => item.trackId === song.trackId);
+
+        if (index > -1) {
+            cart[index].quantity += 1;
+        } else {
+            cart.push({ ...song, quantity: 1 }); // Set quantity to 1 for new items
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
     };
 
     return (
         <div>
             <Link to="/cart">Go to Cart</Link>
-            <div className="price-filter">
-                <label>Min Points: </label>
-                <input type="number" value={minPoints} onChange={(e) => setMinPoints(e.target.value)} />
-                <label>Max Points: </label>
-                <input type="number" value={maxPoints} onChange={(e) => setMaxPoints(e.target.value)} />
+            <div className="artist-filter">
+                <label>Filter by Artist: </label>
+                <select value={selectedArtist} onChange={(e) => setSelectedArtist(e.target.value)}>
+                    {Object.keys(artistIds).map(artist => (
+                        <option key={artist} value={artist}>{artist}</option>
+                    ))}
+                </select>
             </div>
             <div className="songs-grid">
-                {artistSongs.filter(song => (song.collectionPrice * 100) >= minPoints && (song.collectionPrice * 100) <= maxPoints).map((song, index) => (
+                {artistSongs.filter(song => selectedArtist === 'All Artists' || song.artistName === selectedArtist || song.trackName.includes(selectedArtist)).map((song, index) => (
                     <div key={index} className="song-card">
                         <img src={song.artworkUrl100} alt={song.trackName} className="song-image" />
                         <div className="song-info">

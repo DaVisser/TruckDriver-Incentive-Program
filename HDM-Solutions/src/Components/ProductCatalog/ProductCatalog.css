@@ -254,7 +254,7 @@
 
 .song-artist {
     font-size: 14px;
-    color: #666;
+    color: #b4b4b4;
 }
 
 .song-price {
@@ -316,4 +316,20 @@
     gap: 10px;
 }
 
+.artist-filter {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.artist-filter label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.artist-filter select {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
