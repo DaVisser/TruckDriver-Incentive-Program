@@ -10,7 +10,16 @@ const UserManagement = () => {
     const [userRole, setUserRole] = useState('');
     const [isLoading, setIsLoading] = useState(true); // Assume loading by default
     const [isError, setIsError] = useState(false);
-    // in progress
+    const [showCreateUserForm, setShowCreateUserForm] = useState(false); // NEW: Control form visibility
+    const [newUserData, setNewUserData] = useState({ // NEW: Hold new user data
+        username: '',
+        email: '',
+        birthdate: '',
+        family_name: '',
+        gender: '',
+        given_name: '',
+        phone_number: '',
+    });
     // write a lambda function that disables a user in cognito
     const handleDeactivate = async (username) => {
         const confirmDeactivate = window.confirm(`Are you sure you want to deactivate ${username}?`);
@@ -38,7 +47,26 @@ const UserManagement = () => {
             alert(`Failed to deactivate ${username}`);
         }
     };    
-    // in progress ^^^
+    // in progress ***********
+    const handleCreateUser = async (e) => { // NEW: Handle form submission
+        e.preventDefault();
+        try {
+            const response = await fetch('https://mhgex7oqei.execute-api.us-east-1.amazonaws.com/dev/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newUserData),
+            });
+            if (!response.ok) throw new Error('Failed to create user');
+            const result = await response.json();
+            alert(result.message);
+            setShowCreateUserForm(false); // Hide form on success
+            // Optionally refresh the user list here
+        } catch (error) {
+            console.error("Error creating user: ", error);
+            alert(`Failed to create user: ${error.message}`);
+        }
+    };
+    // in progress ***********
 
     useEffect(() => {
       const getUserName = async () => {
@@ -100,6 +128,40 @@ const UserManagement = () => {
     return (
         <div>
             <h1>User Management</h1>
+            <button className="create-user-btn" onClick={() => setShowCreateUserForm(true)}>Create User</button> {/* Create User button */}
+            {showCreateUserForm && (
+    <form className="create-user-form" onSubmit={handleCreateUser}>
+        <label>Username</label>
+        <input type="text" name="username" value={newUserData.username} onChange={e => setNewUserData({ ...newUserData, username: e.target.value })} required />
+
+        <label>Email</label>
+        <input type="email" name="email" value={newUserData.email} onChange={e => setNewUserData({ ...newUserData, email: e.target.value })} required />
+
+        <label>First Name</label>
+        <input type="text" name="given_name" value={newUserData.given_name} onChange={e => setNewUserData({ ...newUserData, given_name: e.target.value })} required />
+
+        <label>Last Name</label>
+        <input type="text" name="family_name" value={newUserData.family_name} onChange={e => setNewUserData({ ...newUserData, family_name: e.target.value })} required />
+
+        <label>Birthdate</label>
+        <input type="date" name="birthdate" value={newUserData.birthdate} onChange={e => setNewUserData({ ...newUserData, birthdate: e.target.value })} required />
+
+        <label>Gender</label>
+        <select name="gender" value={newUserData.gender} onChange={e => setNewUserData({ ...newUserData, gender: e.target.value })} required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+
+        <label>Phone Number</label>
+        <input type="text" name="phone_number" value={newUserData.phone_number} onChange={e => setNewUserData({ ...newUserData, phone_number: e.target.value })} required />
+
+        <label>Role</label>
+        <input type="text" name="role" value={newUserData.role} onChange={e => setNewUserData({ ...newUserData, role: e.target.value })} required />
+
+        <button type="submit" className="submit-btn">Submit</button>
+    </form>
+)}
             <table>
                 {/* Table headers and rows */}
                 <thead>
