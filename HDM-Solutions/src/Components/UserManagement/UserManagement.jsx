@@ -48,26 +48,31 @@ const UserManagement = () => {
         }
     };    
     // in progress ***********
-    const handleCreateUser = async (e) => { // NEW: Handle form submission
-        e.preventDefault();
-        try {
-            const response = await fetch('https://mhgex7oqei.execute-api.us-east-1.amazonaws.com/dev/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newUserData),
-            });
-            if (!response.ok) throw new Error('Failed to create user');
-            const result = await response.json();
-            alert(result.message);
-            setShowCreateUserForm(false); // Hide form on success
-            // Optionally refresh the user list here
-        } catch (error) {
-            console.error("Error creating user: ", error);
-            alert(`Failed to create user: ${error.message}`);
-        }
-    };
-    // in progress ***********
+const handleCreateUser = async (e) => {
+    e.preventDefault();
+    try {
+        // Spread the newUserData object and add the userPoolId property at the same level
+        const userDataWithPoolId = {
+            ...newUserData,
+            userPoolId: 'us-east-1_2qaCHCZk4', // Use your actual User Pool ID here
+        };
 
+        const response = await fetch('https://mhgex7oqei.execute-api.us-east-1.amazonaws.com/dev/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userDataWithPoolId),
+        });
+        if (!response.ok) throw new Error('Failed to create user');
+        const result = await response.json();
+        alert(result.message);
+        setShowCreateUserForm(false); // Hide form on success
+        // Optionally refresh the user list here
+    } catch (error) {
+        console.error("Error creating user: ", error);
+        alert(`Failed to create user: ${error.message}`);
+    }
+};
+// in progress ***********
     useEffect(() => {
       const getUserName = async () => {
         try {

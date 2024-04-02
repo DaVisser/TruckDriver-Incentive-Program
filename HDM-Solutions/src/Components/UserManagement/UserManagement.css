@@ -31,13 +31,13 @@ table {
     margin: 10px 0; /* Adds space around buttons */
   }
   
-  /* Styles for Create User button */
   .create-user-btn {
     background-color: #4CAF50; /* Green color for consistency */
     display: block; /* Block level for centering */
     width: max-content; /* Fit to content */
     margin: 20px auto; /* Center the button */
   }
+  
   
   /* Styles for the form */
   .create-user-form {
