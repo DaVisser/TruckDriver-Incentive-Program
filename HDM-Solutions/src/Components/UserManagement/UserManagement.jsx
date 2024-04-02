@@ -48,30 +48,37 @@ const UserManagement = () => {
         }
     };    
     // in progress ***********
-const handleCreateUser = async (e) => {
-    e.preventDefault();
-    try {
-        // Spread the newUserData object and add the userPoolId property at the same level
-        const userDataWithPoolId = {
-            ...newUserData,
-            userPoolId: 'us-east-1_2qaCHCZk4', // Use your actual User Pool ID here
-        };
-
-        const response = await fetch('https://mhgex7oqei.execute-api.us-east-1.amazonaws.com/dev/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userDataWithPoolId),
-        });
-        if (!response.ok) throw new Error('Failed to create user');
-        const result = await response.json();
-        alert(result.message);
-        setShowCreateUserForm(false); // Hide form on success
-        // Optionally refresh the user list here
-    } catch (error) {
-        console.error("Error creating user: ", error);
-        alert(`Failed to create user: ${error.message}`);
-    }
-};
+    const handleCreateUser = async (e) => {
+        e.preventDefault();
+        try {
+            // Ensure the userPoolId is correctly included
+            const userDataWithPoolId = {
+                ...newUserData,
+                userPoolId: 'us-east-1_2qaCHCZk4', // Confirm this is the correct User Pool ID
+            };
+    
+            const response = await fetch('https://mhgex7oqei.execute-api.us-east-1.amazonaws.com/dev/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userDataWithPoolId),
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to create user');
+            }
+    
+            const result = await response.json();
+            alert(result.message);
+            setShowCreateUserForm(false); // Hide form on success
+    
+            // Optionally refresh the user list here, e.g., by calling a function that fetches the updated user list
+        } catch (error) {
+            console.error("Error creating user: ", error);
+            alert(`Failed to create user: ${error.message}`);
+        }
+    };
+    
 // in progress ***********
     useEffect(() => {
       const getUserName = async () => {
@@ -111,7 +118,7 @@ const handleCreateUser = async (e) => {
     }, [userName]);
 
     useEffect(() => {
-        if (userRole === 'Admin') {
+        if (userRole === 'Admin' || userRole === 'Sponsor') {
             const fetchUsers = async () => {
                 try {
                     const response = await fetch('https://cqf7mwevac.execute-api.us-east-1.amazonaws.com/dev/users');
@@ -128,7 +135,7 @@ const handleCreateUser = async (e) => {
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error occurred while fetching user role.</div>;
     // Display users only if the userRole is 'Admin'
-    if (userRole !== 'Admin') return <div>You are not authorized to view this page.</div>;
+    if (userRole !== 'Admin' && userRole !== 'Sponsor') return <div>You are not authorized to view this page.</div>;
 
     return (
         <div>

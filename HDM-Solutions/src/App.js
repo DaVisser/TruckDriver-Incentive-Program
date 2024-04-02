@@ -324,6 +324,7 @@ const components = {
       }
     };
     checkUserRole();
+    console.log("User role is " + userRole);
   }, [userName]);
 
   return (
