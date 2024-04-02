@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import {
     BrowserRouter as Router,
     Routes,
@@ -18,7 +18,7 @@ import ApplicationPage from './Components/ApplicationPage/ApplicationPage.jsx';
 import OurSponsors from './Components/OurSponsors/OurSponsors.jsx';
 import hdmsolutionslogo from './Components/Assets/hdm-solutions-logo.jpg';
 import Cart from './Components/ProductCatalog/Cart.jsx';
-
+import { signOut} from 'aws-amplify/auth';
 Amplify.configure(awsExports)
 
 const components = {
@@ -282,6 +282,29 @@ const components = {
   };
   
   export default function App() {
+    const handleUserActivity = useCallback(() => {
+      clearTimeout(window.idleTimeout);
+      console.log('Timer: ',window.idleTimeout);
+      window.idleTimeout = setTimeout(() => {
+          signOut();
+      }, 30000); // 30 seconds
+  }, [signOut]);
+  useEffect(() => {
+      document.addEventListener('mousemove', handleUserActivity);
+      document.addEventListener('keypress', handleUserActivity);
+      document.addEventListener('click', handleUserActivity);
+      document.addEventListener('scroll', handleUserActivity);
+
+      handleUserActivity();
+
+      return () => {
+          document.removeEventListener('mousemove', handleUserActivity);
+          document.removeEventListener('keypress', handleUserActivity);
+          document.removeEventListener('click', handleUserActivity);
+          document.removeEventListener('scroll', handleUserActivity);
+          clearTimeout(window.idleTimeout);
+      };
+  }, [handleUserActivity]);
     return (
         <Authenticator formFields={formFields} components={components}>
             {({ signOut }) => (
