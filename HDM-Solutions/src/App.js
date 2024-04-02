@@ -284,7 +284,6 @@ const components = {
   export default function App() {
     const handleUserActivity = useCallback(() => {
       clearTimeout(window.idleTimeout);
-      console.log('Timer: ',window.idleTimeout);
       window.idleTimeout = setTimeout(() => {
           signOut();
       }, 30000); // 30 seconds
@@ -296,7 +295,6 @@ const components = {
       document.addEventListener('scroll', handleUserActivity);
 
       handleUserActivity();
-
       return () => {
           document.removeEventListener('mousemove', handleUserActivity);
           document.removeEventListener('keypress', handleUserActivity);
