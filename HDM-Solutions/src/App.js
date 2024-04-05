@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
     BrowserRouter as Router,
     Routes,
@@ -16,9 +16,10 @@ import ProfilePage from './Components/ProfilePage/ProfilePage.jsx';
 import ProductCatalog from './Components/ProductCatalog/ProductCatalog.jsx';
 import ApplicationPage from './Components/ApplicationPage/ApplicationPage.jsx';
 import OurSponsors from './Components/OurSponsors/OurSponsors.jsx';
+import UserManagement from './Components/UserManagement/UserManagement.jsx';
 import hdmsolutionslogo from './Components/Assets/hdm-solutions-logo.jpg';
 import Cart from './Components/ProductCatalog/Cart.jsx';
-import { signOut} from 'aws-amplify/auth';
+import { signOut, getCurrentUser } from 'aws-amplify/auth';
 Amplify.configure(awsExports)
 
 const components = {
@@ -282,6 +283,49 @@ const components = {
   };
   
   export default function App() {
+    // handling role checking variables here ****
+    const [userName, setUserName] = useState('');
+    const [userRole, setUserRole] = useState('');
+    const [isLoading, setIsLoading] = useState(true); // Assume loading by default
+    const [isError, setIsError] = useState(false);
+
+    useEffect(() => {
+      const getUserName = async () => {
+        try {
+          const attributes = await getCurrentUser();
+          const username = attributes.username;
+  
+          setUserName(username);
+        } catch (error) {
+          console.error('Error fetching user name:', error);
+        }
+      };
+      getUserName();
+    }, []);
+  
+    useEffect(() => {
+      const checkUserRole = async () => {
+        if (!userName) return; // Return early if userName is not set yet
+        
+        setIsLoading(true); // Begin loading
+        setIsError(false); // Reset error state
+        
+        try {
+          const response = await fetch(`https://1hmxcygemd.execute-api.us-east-1.amazonaws.com/dev/user?username=${userName}`);
+          const data = await response.json();
+          
+          setUserRole(data.role); // Assuming the API response has a 'role' field
+          setIsLoading(false); // Loading complete
+        } catch (error) {
+          console.error('Error checking user role:', error);
+          setIsError(true); // Set error state
+          setIsLoading(false); // Loading complete
+        }
+      };
+      checkUserRole();
+      console.log("User role is " + userRole);
+    }, [userName]);
+    // end handling check user role *****
     const handleUserActivity = useCallback(() => {
       clearTimeout(window.idleTimeout);
       window.idleTimeout = setTimeout(() => {
@@ -317,6 +361,7 @@ const components = {
                                 <Link to="/application">Application</Link>
                                 <Link to="/cart">Cart</Link>
                                 <Link to="/sponsors">OurSponsors</Link>
+                                {!isLoading && !isError && (userRole === 'Admin' || userRole === 'Sponsor') && <Link to="/user-management">User Management</Link>}
                             </div>
                             <div className="nav-signout">
                                 <button onClick={signOut}>Sign out</button>
@@ -330,7 +375,10 @@ const components = {
                             <Route path="/application" element={<ApplicationPage />} />
                             <Route path="/cart" element={<Cart />} />
                             <Route path="/sponsors" element={<OurSponsors />} />
+                            {!isLoading && !isError && (userRole === 'Admin' || userRole === 'Sponsor') && <Route path="/user-management" element={<UserManagement />} />}
                         </Routes>
+                        {isLoading && <div>Loading...</div>}
+                        {isError && <div>Error occurred while fetching user data.</div>}
                     </div>
                 </Router>
             )}
