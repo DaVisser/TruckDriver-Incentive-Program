@@ -1,0 +1,79 @@
+/* src/Components/UserManagement/UserManagement.css */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px; /* Adds space between table and form/button */
+  }
+  
+  th, td {
+    border: 1px solid #000000;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #817784; /* Lighter color for better readability */
+  }
+  
+  th {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  button {
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 8px 16px; /* Slightly larger for better visibility */
+    border-radius: 5px;
+    margin: 10px 0; /* Adds space around buttons */
+  }
+  
+  .create-user-btn {
+    background-color: #4CAF50; /* Green color for consistency */
+    display: block; /* Block level for centering */
+    width: max-content; /* Fit to content */
+    margin: 20px auto; /* Center the button */
+  }
+  
+  
+  /* Styles for the form */
+  .create-user-form {
+    background-color: #606060; /* White background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 80%; /* Responsive width */
+    max-width: 500px; /* Maximum width */
+    margin: 20px auto; /* Center the form */
+  }
+  
+  .create-user-form label {
+    display: block; /* Block level for stacking */
+    margin-bottom: 5px; /* Space below labels */
+  }
+  
+  .create-user-form input,
+  .create-user-form select {
+    width: 100%; /* Full width inputs */
+    padding: 8px; /* Padding for input */
+    margin-bottom: 20px; /* Space between inputs */
+    border-radius: 4px; /* Rounded corners for inputs */
+    border: 1px solid #ccc; /* Light border for inputs */
+  }
+  
+  .submit-btn {
+    background-color: #4CAF50; /* Consistent green color */
+    color: white;
+    width: 100%; /* Full width button */
+    padding: 10px; /* Larger padding */
+    border-radius: 5px; /* Consistency with other buttons */
+    cursor: pointer;
+  }
+  
+  .submit-btn:hover {
+    opacity: 0.9; /* Slight effect on hover */
+  }
+  
