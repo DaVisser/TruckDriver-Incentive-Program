@@ -244,7 +244,9 @@ const handleCreateUser = async (e) => {
                     </tr>
                 </thead>
                 <tbody>
-    {users.filter(user => userRole !== 'Admin' || user.Role !== 'Admin').map(user => (
+                {users
+                    .filter(user => userRole !== 'Sponsor' || user.Role !== 'Admin') // Exclude admins if current user is a sponsor
+                    .map(user => (
         <tr key={user.UserId}>
             <td><button onClick={() => handleDeactivate(user.UserName)}>De-Activate</button></td>
             <td>{user.UserName}</td>
