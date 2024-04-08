@@ -20,6 +20,9 @@ const UserManagement = () => {
         given_name: '',
         phone_number: '',
     });
+    const [loginEvents, setLoginEvents] = useState([]);
+    const [showLoginEvents, setShowLoginEvents] = useState(false); // NEW: Control login events visibility
+
     // write a lambda function that disables a user in cognito
     const handleDeactivate = async (username) => {
         const confirmDeactivate = window.confirm(`Are you sure you want to deactivate ${username}?`);
@@ -78,8 +81,11 @@ const UserManagement = () => {
             alert(`Failed to create user: ${error.message}`);
         }
     };
-    
 // in progress ***********
+    // Function to toggle display of login events table
+    const toggleLoginEvents = () => {
+        setShowLoginEvents(!showLoginEvents);
+    };
     useEffect(() => {
       const getUserName = async () => {
         try {
@@ -116,6 +122,21 @@ const UserManagement = () => {
       };
       checkUserRole();
     }, [userName]);
+
+    useEffect(() => {
+        const fetchLoginEvents = async () => {
+          try {
+            const response = await fetch('https://knwizrbtec.execute-api.us-east-1.amazonaws.com/dev/loginevents');
+            const data = await response.json();
+            setLoginEvents(data);
+          } catch (error) {
+            console.error('Error fetching login events:', error);
+          }
+        };
+        if (userRole === 'Admin') {
+          fetchLoginEvents();
+        }
+      }, [userRole]);
 
     useEffect(() => {
         if (userRole === 'Admin' || userRole === 'Sponsor') {
@@ -174,6 +195,32 @@ const UserManagement = () => {
         <button type="submit" className="submit-btn">Submit</button>
     </form>
 )}
+    <div>
+        <button onClick={toggleLoginEvents}>
+            {showLoginEvents ? 'Hide Login Events' : 'Show Login Events'}
+        </button>
+        {showLoginEvents && (
+            <section className="login-events">
+                <h2>Driver Login Activity</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Login Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {loginEvents.map((event, index) => (
+                            <tr key={index}>
+                                <td>{event.UserName}</td>
+                                <td>{new Date(event.LoginTime).toLocaleString()}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </section>
+        )}
+    </div>
             <table>
                 {/* Table headers and rows */}
                 <thead>
@@ -200,7 +247,7 @@ const UserManagement = () => {
 </tbody>
 
             </table>
-        </div>
+</div>
     );
 };
 
