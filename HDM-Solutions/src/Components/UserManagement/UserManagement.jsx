@@ -51,36 +51,46 @@ const UserManagement = () => {
         }
     };    
     // in progress ***********
-    const handleCreateUser = async (e) => {
-        e.preventDefault();
-        try {
-            // Ensure the userPoolId is correctly included
-            const userDataWithPoolId = {
-                ...newUserData,
-                userPoolId: 'us-east-1_2qaCHCZk4', // Confirm this is the correct User Pool ID
-            };
-    
-            const response = await fetch('https://mhgex7oqei.execute-api.us-east-1.amazonaws.com/dev/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userDataWithPoolId),
-            });
-    
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to create user');
+    // Function to handle user creation
+const handleCreateUser = async (e) => {
+    e.preventDefault();
+    try {
+        // Ensure the userPoolId is correctly included
+        const userDataWithPoolId = {
+            ...newUserData,
+            userPoolId: 'us-east-1_2qaCHCZk4', // Confirm this is the correct User Pool ID
+        };
+
+        // If the user is a sponsor, restrict the role to 'driver' or 'sponsor'
+        if (userRole === 'Sponsor') {
+            const validRoles = ['driver', 'sponsor'];
+            if (!validRoles.includes(newUserData.role.toLowerCase())) {
+                throw new Error('Sponsor can only create users with role "driver" or "sponsor"');
             }
-    
-            const result = await response.json();
-            alert(result.message);
-            setShowCreateUserForm(false); // Hide form on success
-    
-            // Optionally refresh the user list here, e.g., by calling a function that fetches the updated user list
-        } catch (error) {
-            console.error("Error creating user: ", error);
-            alert(`Failed to create user: ${error.message}`);
         }
-    };
+
+        const response = await fetch('https://mhgex7oqei.execute-api.us-east-1.amazonaws.com/dev/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userDataWithPoolId),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to create user');
+        }
+
+        const result = await response.json();
+        alert(result.message);
+        setShowCreateUserForm(false); // Hide form on success
+
+        // Optionally refresh the user list here, e.g., by calling a function that fetches the updated user list
+    } catch (error) {
+        console.error("Error creating user: ", error);
+        alert(`Failed to create user: ${error.message}`);
+    }
+};
+
 // in progress ***********
     // Function to toggle display of login events table
     const toggleLoginEvents = () => {
