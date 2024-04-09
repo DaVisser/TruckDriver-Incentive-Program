@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Header, Segment, Button, Form, Message, Image } from 'semantic-ui-react';
+import './ProfilePage.css';
 import { getCurrentUser, fetchUserAttributes, updateUserAttributes, confirmUserAttribute, updatePassword} from 'aws-amplify/auth';
 
 const ProfilePage = () => {
@@ -21,10 +22,10 @@ const ProfilePage = () => {
 
     const [vertificationCode, setVertificationCode] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
-    //const [testUserInfo, setTestUserInfo] = useState(Object);
+    
     const [userInfo, setUserInfo] = useState(Object);
     const [driverInfo, setDriverInfo] = useState({
-        given_name: 'test',
+        given_name: '',
         family_name: '',
         email: '',
         birthdate: '',
@@ -39,6 +40,7 @@ const ProfilePage = () => {
         try {
             //Congito Provides function to call user info. So we switched from API call to this instead.
             const userAttr = await fetchUserAttributes();
+            console.log("Tesing: ", userAttr);
             setUserInfo(userAttr);  
         } catch (error) {
           console.error('Error fetching user info:', error);
@@ -112,8 +114,8 @@ const ProfilePage = () => {
                 userAttributes: {
                   email: email,
                   gender: gender,
-                  family_name: firstName,
-                  given_name: lastName,
+                  family_name: lastName,
+                  given_name: firstName,
                   birthdate: birthdate,
                   phone_number: phoneNumber,
                   "custom:LicenseID" : licenseID,
@@ -235,42 +237,49 @@ const ProfilePage = () => {
                     {displaySection === 'updateProfile' && (
                         <Form>
                             <Form.Input
+                                className="form-input"
                                 label='First Name'
                                 placeholder='Enter your first name'
                                 value={firstName}
                                 onChange={(e) => setFirstName(e.target.value)}
                             />
                             <Form.Input
+                                className="form-input"
                                 label='Last Name'
                                 placeholder='Enter your last name'
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
                             />
                             <Form.Input
+                                className="form-input"
                                 label='Email'
                                 placeholder='Enter your email'
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                             <Form.Input
+                                className="form-input"
                                 label='Birthdate'
                                 placeholder='Enter your birthdate'
                                 value={birthdate}
                                 onChange={(e) => setBirthdate(e.target.value)}
                             />
                             <Form.Input
+                                className="form-input"
                                 label='Phone Number'
                                 placeholder='Enter your phone number'
                                 value={phoneNumber}
                                 onChange={(e) => setPhoneNumber(e.target.value)}
                             />
                             <Form.Input
+                                className="form-input"
                                 label='Gender'
                                 placeholder='Enter your gender'
                                 value={gender}
                                 onChange={(e) => setGender(e.target.value)}
                             />
                             <Form.Input
+                                className="form-input"
                                 label='License ID'
                                 placeholder='Enter your license ID'
                                 value={licenseID}

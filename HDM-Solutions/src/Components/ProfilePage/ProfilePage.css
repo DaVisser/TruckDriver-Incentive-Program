@@ -5,6 +5,56 @@
   border-radius: 5px; /* Rounded corners for a softer look */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
 }
+.input {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  width: auto;
+  height: auto;
+  background: #eaeaea;
+  border-radius: 6px;
+}
+
+.input img {
+  margin: 0px 30px;
+}
+
+.input input {
+  height: 50px;
+  width: 70%;
+  /* Adjusted width to 100% */
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #797979;
+  font-size: 19px;
+}
+
+.input-error {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  width: 480px;
+  height: 80px;
+  background: #eaeaea;
+  border-radius: 6px;
+  border: 1px solid red;
+}
+
+.input-error img {
+  margin: 0px 30px;
+}
+
+.input-error input {
+  height: 50px;
+  width: 100%;
+  /* Adjusted width to 100% */
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #797979;
+  font-size: 19px;
+}
 
 .grid {
   margin-top: 20px;
@@ -44,6 +94,3 @@
 .button.submit {
   margin-top: 10px;
 }
-.
-
-/* Adjust styles as needed */
