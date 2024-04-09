@@ -21,7 +21,6 @@ const ProfilePage = () => {
     const [issue, setissue] = useState('');
     const [vertificationCode, setVertificationCode] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
-    //const [testUserInfo, setTestUserInfo] = useState(Object);
     const [userInfo, setUserInfo] = useState(Object);
     const [driverInfo, setDriverInfo] = useState({
         given_name: 'test',
