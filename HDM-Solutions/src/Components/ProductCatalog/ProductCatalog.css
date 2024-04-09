@@ -40,7 +40,7 @@
     display: flex;
     align-items: center;
     margin: auto;
-    width: 480px;
+    width: auto;
     height: 80px;
     background: #eaeaea;
     border-radius: 6px;
