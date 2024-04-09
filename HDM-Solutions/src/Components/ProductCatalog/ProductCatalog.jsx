@@ -80,6 +80,13 @@ function ProductCatalog() {
         localStorage.setItem('catalog', JSON.stringify(updatedCatalog)); // Update catalog in localStorage
     };
 
+    const editProductName = (index, newName) => {
+        const updatedCatalog = [...artistSongs];
+        updatedCatalog[index].trackName = newName;
+        setArtistSongs(updatedCatalog);
+        localStorage.setItem('catalog', JSON.stringify(updatedCatalog)); // Update catalog in localStorage
+    };
+
     return (
         <div>
             <Link to="/cart">Go to Cart</Link>
@@ -96,7 +103,11 @@ function ProductCatalog() {
                     <div key={index} className="song-card">
                         <img src={song.artworkUrl100} alt={song.trackName} className="song-image" />
                         <div className="song-info">
-                            <div className="song-title">{song.trackName}</div>
+                            <input
+                                type="text"
+                                value={song.trackName}
+                                onChange={(e) => editProductName(index, e.target.value)}
+                            />
                             <div className="song-artist">{song.artistName}</div>
                             <div className="song-price">
                                 {song.discounted ? Math.round(song.collectionPrice * 0.9 * 100) : Math.round(song.collectionPrice * 100)} Points
