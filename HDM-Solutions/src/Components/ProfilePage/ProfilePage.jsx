@@ -83,6 +83,10 @@ const ProfilePage = () => {
     
 
     const back = () =>{
+        setConfirmPassword('');
+        setCurrentPassword('');
+        setNewPassword('');
+        clearErrorMessages();
         setDisplaySection('profile');
     };
     const handleUpdateProfile = () => {
@@ -106,9 +110,70 @@ const ProfilePage = () => {
         setDisplaySection('deleteAccount');
         clearErrorMessages();
     };
-
+    const isValidName = (name) =>{
+        const re = /^[a-z ,.'-]+$/i;
+        return re.test(name);
+    }
+    const isValidEmail = (email) => {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
+        return re.test(email);
+      };
+      
+    const isValidPhoneNumber = (phoneNumber) => {
+        const re = /^\+?\d{10,}$/; // Simple validation for international numbers
+        return re.test(phoneNumber);
+    };
+    const isValidDate = (dateString) => {
+        const regex = /^(?:(?:19|20)\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+        if (!dateString.match(regex)) {
+          // First, check the pattern is correct
+          return false;
+        }
+      
+        // Parse the date to check its validity (e.g., no Feb 30)
+        const date = new Date(dateString);
+        const timestamp = date.getTime();
+      
+        if (typeof timestamp !== 'number' || Number.isNaN(timestamp)) {
+          return false;
+        }
+      
+        return date.toISOString().startsWith(dateString);
+      };
+    const isValidGender = (gender) =>{
+        const re = /^(Male|Female)$/i;
+        return re.test(gender);
+    }
     const handleApplyProfileChanges = async () => {
         try{
+            let errors = [];
+            if(!isValidName(firstName)){
+                errors.push('Invalid first name.');
+            }
+            if(!isValidName(lastName)){
+                errors.push('Invalid last name.');
+            }
+            if (!isValidEmail(email)) {
+                errors.push('Invalid email format.');
+            }
+            if (!isValidDate(birthdate)){
+                errors.push("Invalid Birthday format use YYYY-MM-DD.");
+            }
+            if (!isValidPhoneNumber(phoneNumber)) {
+                errors.push('Invalid phone number format.');
+            }  
+            if(!isValidGender(gender)){
+                errors.push('Invalid Gender type Male or Female.');
+            }
+
+            // Check if there were any errors collected
+            if (errors.length > 0) {
+                setSuccessMessage(''); 
+                // Join all error messages into a single string and set it as the error message
+                setErrorMessage(errors.join(' '));
+                return;
+            }
+            
             //Updates info using a congito given function to update attributes in Congito Userpool.
             const attributes = await updateUserAttributes({
                 userAttributes: {
@@ -137,7 +202,9 @@ const ProfilePage = () => {
               driverInfo.birthdate = birthdate;
               driverInfo.phone_number = phoneNumber;
               driverInfo.gender = gender;
-            setSuccessMessage('Profile changes applied successfully.');
+              setErrorMessage('');
+              setSuccessMessage('Profile changes applied successfully.');
+             
         }catch(error){
             setErrorMessage('Unable to update profile due to unknown error. Try again later.');
             console.log(error);
@@ -145,21 +212,72 @@ const ProfilePage = () => {
         
     };
 
+    function validatePassword(password) {
+        const validations = [
+            { check: /\d/, message: "Must contain at least 1 number." },
+            { check: /[\W_]/, message: "Must contain at least 1 special character." },
+            { check: /[A-Z]/, message: "Must contain at least 1 uppercase letter." },
+            { check: /[a-z]/, message: "Must contain at least 1 lowercase letter." },
+            { check: /.{8,}/, message: "Must be at least 8 characters long." }
+        ];
+    
+        const errors = validations.reduce((acc, current) => {
+            if (!current.check.test(password)) {
+                acc.push(current.message);
+            }
+            return acc;
+        }, []);
+    
+        return {
+            isValid: errors.length === 0,
+            errors, // This will be an array of messages for each failed validation
+        };
+    }
+
     const handleUpdatePasswordConfirm = async () => {
         try{
             const input = {
                 oldPassword: currentPassword,
                 newPassword: newPassword
             };
-            if(confirmPassword != newPassword && currentPassword != confirmPassword){
-                setErrorMessage('Passwords do not match or new password matches current password.');
-            }else{
-
-                await updatePassword(input);
-                setSuccessMessage('Successfully updated Password');
+            if (newPassword !== confirmPassword) {
+                setSuccessMessage(''); 
+                setErrorMessage('Passwords do not match.');
+                return;
             }
+            if (newPassword === currentPassword) {
+                setSuccessMessage(''); 
+                setErrorMessage('New password must be different from current password.');
+                return;
+            }
+            // Call validatePassword to check the new password's validity
+            const { isValid, errors } = validatePassword(newPassword);
+            if (!isValid) {
+                setSuccessMessage(''); 
+                // Join the error messages into a single string and set it as the error message
+                setErrorMessage(errors.join(' '));
+                return;
+            }
+
+            const response = await updatePassword(input);
+            console.log("Password update response: ", response);
+            setErrorMessage('');
+            setSuccessMessage('Successfully updated Password');
+            
         }catch(error){
             console.log(error);
+            setSuccessMessage(''); 
+            let message = "Failed to update password due to an error.";
+            // Check if the error object has a 'message' property
+            if (error.message) {
+                // Extract and use the message from the error object
+                message = error.message;
+            } else if (typeof error === 'string') {
+                // If the error is a string, use it directly
+                message = error;
+            }
+            // Set the extracted message as the error message to display to the user
+            setErrorMessage(message);
         }
     };
 
@@ -289,8 +407,13 @@ const ProfilePage = () => {
                             <Button color='blue' onClick={handleApplyProfileChanges}>Apply Changes</Button>
                             <Button color='blue' onClick={back}>Back</Button>
                             {errorMessage && (
-                                <Message error content={errorMessage} />
+                                <div>
+                                    {errorMessage.split('. ').map((error, index) => (
+                                    <p key={index}>{error.trim()}.</p>
+                                    ))}
+                                </div>
                             )}
+
                             {successMessage && (
                                 <Message success content={successMessage} />
                             )}
@@ -325,8 +448,13 @@ const ProfilePage = () => {
                             <Button color='blue' onClick={handleUpdatePasswordConfirm}>Update Password</Button>
                             <Button color='blue' onClick={back}>Back</Button>
                             {errorMessage && (
-                                <Message error content={errorMessage} />
+                                <div>
+                                    {errorMessage.split('. ').map((error, index) => (
+                                    <p key={index}>{error.trim()}.</p>
+                                    ))}
+                                </div>
                             )}
+
                             {successMessage && (
                                 <Message success content={successMessage} />
                             )}

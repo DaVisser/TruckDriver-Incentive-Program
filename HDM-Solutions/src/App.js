@@ -330,7 +330,7 @@ const components = {
       clearTimeout(window.idleTimeout);
       window.idleTimeout = setTimeout(() => {
           signOut();
-      }, 30000); // 30 seconds
+      }, 300000); // 30 seconds
   }, [signOut]);
   useEffect(() => {
       document.addEventListener('mousemove', handleUserActivity);
