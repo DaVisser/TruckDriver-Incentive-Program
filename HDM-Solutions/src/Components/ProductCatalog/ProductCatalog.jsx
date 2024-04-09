@@ -73,6 +73,13 @@ function ProductCatalog() {
         localStorage.setItem('cart', JSON.stringify(cart));
     };
 
+    const applyDiscount = (index) => {
+        const updatedCatalog = [...artistSongs];
+        updatedCatalog[index].discounted = true;
+        setArtistSongs(updatedCatalog);
+        localStorage.setItem('catalog', JSON.stringify(updatedCatalog)); // Update catalog in localStorage
+    };
+
     return (
         <div>
             <Link to="/cart">Go to Cart</Link>
@@ -91,7 +98,10 @@ function ProductCatalog() {
                         <div className="song-info">
                             <div className="song-title">{song.trackName}</div>
                             <div className="song-artist">{song.artistName}</div>
-                            <div className="song-price">{Math.round(song.collectionPrice * 100)} Points</div>
+                            <div className="song-price">
+                                {song.discounted ? Math.round(song.collectionPrice * 0.9 * 100) : Math.round(song.collectionPrice * 100)} Points
+                                {!song.discounted && <button onClick={() => applyDiscount(index)}>Apply Discount</button>}
+                            </div>
                             <button className="add-to-cart-btn" onClick={() => addToCart(song)}>Add to Cart</button>
                             <button className="delete-from-catalog-btn" style={{ backgroundColor: 'red' }} onClick={() => deleteFromCatalog(index)}>Delete from Catalog</button>
                         </div>
