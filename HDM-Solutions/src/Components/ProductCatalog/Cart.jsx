@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './Cart.css';
 import { Link } from 'react-router-dom';
+import { getCurrentUser} from 'aws-amplify/auth';
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [checkedOutItems, setCheckedOutItems] = useState([]);
+    const [userName, setUserName] = useState('');
+    const [userPoints, setUserPoints] = useState(0);
 
     useEffect(() => {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -12,6 +15,47 @@ function Cart() {
         setCartItems(cart);
         setCheckedOutItems(checkedOut);
     }, []);
+
+    console.log(userName);
+
+    useEffect(() => {
+        const fetchUserPoints = async () => {
+          try {
+            const response = await fetch('https://92fbb96j94.execute-api.us-east-1.amazonaws.com/dev/points', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ userName: userName }), // Send the current user's username in the request body
+            });
+            const data = await response.json();
+            if (data.length > 0) {
+              setUserPoints(data[0].Points); // Update the state with the user's points
+            }
+          } catch (error) {
+            console.error('Error fetching user points:', error);
+          }
+        };
+
+        if (userName) {
+          fetchUserPoints();
+        }
+      }, [userName]);
+
+    useEffect(() => {
+        const getUserName = async () => {
+          try {
+            // Your method to get the current user's name, adjust as necessary
+            const attributes = await getCurrentUser(); 
+            const username = attributes.username;
+    
+            setUserName(username);
+          } catch (error) {
+            console.error('Error fetching user name:', error);
+          }
+        };
+        getUserName();
+      }, []);
 
     const updateQuantity = (index, quantity) => {
         const newCart = [...cartItems];
@@ -45,6 +89,10 @@ function Cart() {
     return (
         <div className="cart">
             <Link to="/catalog">Go to Catalog</Link>
+            <section className="user-points">
+                <h2>Your Points</h2>
+                <p>{userPoints} points</p> {/* Display the user's points */}
+            </section>
             <h2>Cart</h2>
             <div className="cart-items">
                 {cartItems.map((item, index) => (
