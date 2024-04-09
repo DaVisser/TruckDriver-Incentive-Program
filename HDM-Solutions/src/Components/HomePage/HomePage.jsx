@@ -3,7 +3,15 @@ import './HomePage.css';
 import { getCurrentUser } from 'aws-amplify/auth';
 
 const HomePage = ({ user }) => {
-  const [driverScore, setdriverScore] = useState();
+  const [driverScore, setDriverScore] = useState(() => {
+    // Initialize driverScore from localStorage or default to 0
+    const cachedScore = localStorage.getItem('driverScore');
+    return cachedScore ? parseInt(cachedScore, 10) : 0;
+  });
+
+  const [pointsPerSecond, setPointsPerSecond] = useState(1); // Set points per second
+  const [timer, setTimer] = useState(null); // Timer state to manage interval
+
   const upcomingRoutes = [
     { date: '2024-03-10', destination: 'Los Angeles' },
     { date: '2024-03-12', destination: 'San Francisco' },
@@ -16,17 +24,18 @@ const HomePage = ({ user }) => {
 
   const fetchPoints = async () => {
     try {
-        const userSession = await getCurrentUser();
-        const userId = userSession.userId;
-      const response = await fetch('https://7u2pt3y8zd.execute-api.us-east-1.amazonaws.com/prod/UserInfo',{
+      const userSession = await getCurrentUser();
+      const userId = userSession.userId;
+      const response = await fetch('https://7u2pt3y8zd.execute-api.us-east-1.amazonaws.com/prod/UserInfo', {
         method: 'GET',
         headers: {
-            Authorization: `Bearer ${userId}`,
+          Authorization: `Bearer ${userId}`,
         },
       });
       const data = await response.json();
       const points = data[0];
-      setdriverScore(points.Points);
+      setDriverScore(points.Points);
+      localStorage.setItem('driverScore', points.Points); // Update localStorage
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
@@ -64,7 +73,16 @@ const HomePage = ({ user }) => {
 
   useEffect(() => {
     fetchPoints();
-  }, []);
+    const interval = setInterval(() => {
+      setDriverScore(prevScore => {
+        const newScore = prevScore + pointsPerSecond;
+        localStorage.setItem('driverScore', newScore); // Update localStorage
+        return newScore;
+      });
+    }, 1000); // 1 second interval
+    setTimer(interval); // Store the interval ID in state
+    return () => clearInterval(timer); // Clean up interval on component unmount
+  }, [pointsPerSecond]);
 
   useEffect(() => {
     console.log('Current user:', user); // Check if user info is available
@@ -97,28 +115,28 @@ const HomePage = ({ user }) => {
         <h2>Rewards Points</h2>
         <p>{rewardsPoints} points</p>
       </section>
-    
+
       {/* Conditionally render this section if the user is an admin */}
       {userInfo.Role === 'Admin' && (
-        <section className="login-events"> 
-            <h2>Driver Login Activity</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>User Name</th>
-                  <th>Login Time</th>
+        <section className="login-events">
+          <h2>Driver Login Activity</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>User Name</th>
+                <th>Login Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loginEvents.map((event, index) => (
+                <tr key={index}>
+                  <td>{event.UserName}</td>
+                  <td>{new Date(event.LoginTime).toLocaleString()}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {loginEvents.map((event, index) => (
-                  <tr key={index}>
-                    <td>{event.UserName}</td>
-                    <td>{new Date(event.LoginTime).toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </section>
+              ))}
+            </tbody>
+          </table>
+        </section>
       )}
 
       <footer className="footer">
