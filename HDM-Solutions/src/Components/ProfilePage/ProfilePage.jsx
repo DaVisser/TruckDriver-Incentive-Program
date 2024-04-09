@@ -62,7 +62,7 @@ const ProfilePage = () => {
 
         const handleTicketSubmission = async () => {
             try {
-              const response = await fetch('https://qhaiws6ysl.execute-api.us-east-1.amazonaws.com/default', {
+              const response = await fetch('https://thf0vt105d.execute-api.us-east-1.amazonaws.com/dev/', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
