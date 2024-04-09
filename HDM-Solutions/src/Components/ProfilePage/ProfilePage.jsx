@@ -35,18 +35,26 @@ const ProfilePage = () => {
         Application_Status: 'Pending'
     });
 
-    const fetchUserInfo = async () => {
-        try {
-            //Congito Provides function to call user info. So we switched from API call to this instead.
-            const userAttr = await fetchUserAttributes();
-            setUserInfo(userAttr);  
-        } catch (error) {
-          console.error('Error fetching user info:', error);
-        }
-      };
-      useEffect(() => {
+    const [username, setUsername] = useState('');
+    // Other state variables and functions...
+
+    // Fetch user information
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const currentUser = await getCurrentUser();
+                setUsername(currentUser.username);
+
+                // Fetch user attributes
+                const userAttributes = await fetchUserAttributes(currentUser);
+                setUserInfo(userAttributes);
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        };
+
         fetchUserInfo();
-      }, []);
+    }, [username]);
       useEffect(() => {
         setDriverInfo({
             given_name: userInfo.given_name || '',
@@ -100,10 +108,34 @@ const ProfilePage = () => {
         clearErrorMessages();
     };
 
-    const handleDeleteAccount = () => {
-        setDisplaySection('deleteAccount');
-        clearErrorMessages();
+    const [users, setUsers] = useState([]);
+    // write a lambda function that disables a user in cognito
+    const handleDeactivate = async () => {
+        const confirmDeactivate = window.confirm('Are you sure you want to deactivate your account?');
+        if (!confirmDeactivate) return;
+
+        try {
+            const response = await fetch('https://7ckucn4b35.execute-api.us-east-1.amazonaws.com/dev/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username,
+                    userPoolId: 'us-east-1_2qaCHCZk4' // Include the correct UserPoolId
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to deactivate user');
+
+            const result = await response.json();
+            alert(result.message);
+
+            // Handle any further actions after deactivation, such as redirecting the user to a different page or logging them out
+        } catch (error) {
+            console.error('Error deactivating user:', error);
+            alert('Failed to deactivate user');
+        }
     };
+
 
     const handleApplyProfileChanges = async () => {
         try{
@@ -177,6 +209,23 @@ const ProfilePage = () => {
         setProfilePicture(file);
     };
 
+        // Function to handle account deactivation
+        const handleAccountDeactivation = async () => {
+            const confirmDeactivation = window.confirm("Are you sure you want to deactivate your account?");
+            if (!confirmDeactivation) return;
+    
+            try {
+                // Implement account deactivation logic here
+                // For example, you can use updateUserAttributes to set a custom attribute indicating the account is deactivated
+                // Or you can call a backend API to handle the deactivation process
+    
+                // Display success message
+                setSuccessMessage("Your account has been deactivated.");
+            } catch (error) {
+                console.error("Error deactivating account:", error);
+                setErrorMessage("Failed to deactivate your account. Please try again later.");
+            }
+        };
 
     return (
         <Segment color="blue">
@@ -196,7 +245,16 @@ const ProfilePage = () => {
 
                     <Button color='blue' onClick={handleUpdateProfile}>Update Profile</Button>
                     <Button color='green' onClick={handlePasswordUpdate}>UpdatePassword</Button>
-                    <Button color='red' onClick={handleDeleteAccount}>Delete Account</Button>
+                    {/* Deactivate Account Button */}
+                    <Button color='red' onClick={handleDeactivate}>Deactivate Account</Button>
+
+                    {/* Error and success messages */}
+                    {errorMessage && (
+                        <Message error content={errorMessage} />
+                    )}
+                    {successMessage && (
+                        <Message success content={successMessage} />
+                    )}
                     {displaySection === 'emailVertification' && (
                         <>
                             <Form>
@@ -220,15 +278,15 @@ const ProfilePage = () => {
 
                     {displaySection === 'profile' && (
                         <>
-                            <p><strong>First Name:</strong> {driverInfo.given_name}</p>
-                            <p><strong>Last Name:</strong> {driverInfo.family_name}</p>
-                            <p><strong>Email:</strong> {driverInfo.email}</p>
-                            <p><strong>Birthdate:</strong> {driverInfo.birthdate}</p>
-                            <p><strong>Phone Number:</strong> {driverInfo.phone_number}</p>
-                            <p><strong>Gender:</strong> {driverInfo.gender}</p>
-                            <p><strong>License ID:</strong> {driverInfo.LicenseID}</p>
-                            <p><strong>Role:</strong> {driverInfo.Role}</p>
-                            <p><strong>Application Status:</strong> {driverInfo.Application_Status}</p>
+                            <p><strong>First Name:</strong> {userInfo?.given_name}</p>
+                            <p><strong>Last Name:</strong> {userInfo?.family_name}</p>
+                            <p><strong>Email:</strong> {userInfo?.email}</p>
+                            <p><strong>Birthdate:</strong> {userInfo?.birthdate}</p>
+                            <p><strong>Phone Number:</strong> {userInfo?.phone_number}</p>
+                            <p><strong>Gender:</strong> {userInfo?.gender}</p>
+                            <p><strong>License ID:</strong> {userInfo?.['custom:LicenseID']}</p>
+                            <p><strong>Role:</strong> {userInfo?.['custom:Role']}</p>
+                            <p><strong>Application Status:</strong> {userInfo?.['custom:Application_Status']}</p>
                         </>
                     )}
 
@@ -322,37 +380,6 @@ const ProfilePage = () => {
                                 <Message success content={successMessage} />
                             )}
                         </Form>
-                    )}
-
-                    {displaySection === 'deleteAccount' && (
-                        <>
-                            <p>Are you sure you want to delete your account?</p>
-                            <Form>
-                                <Form.Input
-                                    label='Email'
-                                    placeholder='Enter your email'
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                                <Form.Input
-                                    label='Password'
-                                    type='password'
-                                    placeholder='Enter your password'
-                                    value={currentPassword}
-                                    onChange={(e) => setCurrentPassword(e.target.value)}
-                                />
-
-                                <Button color='red' onClick={handleDeleteConfirmation}>Delete Account</Button>
-                                <Button color='red' onClick={handleDeleteConfirmation}>Cancel</Button>
-
-                                {errorMessage && (
-                                    <Message error content={errorMessage} />
-                                )}
-                                {successMessage && (
-                                    <Message success content={successMessage} />
-                                )}
-                            </Form>
-                        </>
                     )}
 
                 </Grid.Column>
