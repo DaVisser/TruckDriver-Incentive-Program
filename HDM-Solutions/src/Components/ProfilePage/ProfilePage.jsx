@@ -62,7 +62,7 @@ const ProfilePage = () => {
 
         const handleTicketSubmission = async () => {
             try {
-              const response = await fetch('https://hj691579y6.execute-api.us-east-1.amazonaws.com/default/team06-SupportTickets', {
+              const response = await fetch('https://qhaiws6ysl.execute-api.us-east-1.amazonaws.com/default', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -74,6 +74,10 @@ const ProfilePage = () => {
                   issue,
                 }),
               });
+              console.log(firstName);
+              console.log(lastName);
+              console.log(phoneNumber);
+              console.log(issue);
               console.log('API Response: ', response);
               if (response.ok) {
                 setSuccessMessage('Support Ticket submitted successfully.');
@@ -234,7 +238,7 @@ const ProfilePage = () => {
                     <Button color='blue' onClick={handleUpdateProfile}>Update Profile</Button>
                     <Button color='green' onClick={handlePasswordUpdate}>UpdatePassword</Button>
                     <Button color='red' onClick={handleDeleteAccount}>Delete Account</Button>
-                    <Button color='orange' onClick={handleSupportTicket}>Driver Issue Ticket</Button>
+                    <Button color='orange' onClick={handleSupportTicket}>Driver Support Ticket</Button>
                     {displaySection === 'emailVertification' && (
                         <>
                             <Form>
