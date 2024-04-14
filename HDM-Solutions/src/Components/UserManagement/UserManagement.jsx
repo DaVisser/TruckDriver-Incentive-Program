@@ -209,7 +209,7 @@ return (
     </button>
     {showLoginEvents && (
         <section className="login-events">
-            <h2>Driver Login Activity</h2>
+            <h2>User Login Activity</h2>
             <table>
                 <thead>
                     <tr>
