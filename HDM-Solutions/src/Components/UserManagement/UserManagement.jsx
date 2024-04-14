@@ -33,8 +33,8 @@ const UserManagement = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    username, // Assuming your Lambda function expects a 'username' field in the body
-                    userPoolId: 'us-east-1_2qaCHCZk4' // Include the UserPoolId if necessary, or handle it within the Lambda
+                    username, // expects a 'username' field in the body
+                    userPoolId: 'us-east-1_2qaCHCZk4' // Include the UserPoolId
                 })
             });
     
@@ -43,7 +43,7 @@ const UserManagement = () => {
             const result = await response.json();
             alert(result.message);
     
-            // Refresh the users list by removing the deactivated user
+            // Optional: Refreshes the users list by removing the deactivated user
             setUsers(users.filter(user => user.UserName !== username));
         } catch (error) {
             console.error("Error deactivating user: ", error);
