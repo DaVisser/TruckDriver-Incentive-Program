@@ -215,6 +215,7 @@ return (
                     <tr>
                         <th>User Name</th>
                         <th>Login Time</th>
+                        <th>Login Success</th> {/* Add a new table header for Login Success */}
                     </tr>
                 </thead>
                 <tbody>
@@ -222,6 +223,7 @@ return (
                         <tr key={index}>
                             <td>{event.UserName}</td>
                             <td>{new Date(event.LoginTime).toLocaleString()}</td>
+                            <td>{event.LoginSuccess === 1 ? 'Success' : 'Failure'}</td> {/* Display login success status */}
                         </tr>
                     ))}
                 </tbody>

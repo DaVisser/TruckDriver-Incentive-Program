@@ -76,4 +76,84 @@ table {
   .submit-btn:hover {
     opacity: 0.9; /* Slight effect on hover */
   }
-  
+
+  /* src/Components/UserManagement/UserManagement.css */
+
+/* Update the table styles */
+.login-events table {
+    width: 80%; /* Set the width of the table */
+    margin: 0 auto; /* Center the table horizontally */
+}
+
+/* Update the table cell styles */
+.login-events th, .login-events td {
+    padding: 6px; /* Reduce padding for smaller cells */
+}
+
+/* Update the table header styles */
+.login-events th {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center; /* Center align the text */
+}
+
+/* Update the table row styles */
+.login-events tbody tr:nth-child(even) {
+    background-color: #817784; /* Lighter color for better readability */
+}
+
+/* Update the button styles */
+.login-events button {
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 6px 12px; /* Slightly smaller padding */
+    border-radius: 5px;
+    margin: 10px auto; /* Center the button horizontally */
+    display: block; /* Make the button a block element */
+    width: max-content; /* Fit to content */
+}
+
+/* src/Components/UserManagement/UserManagement.css */
+
+/* Update the table styles */
+.login-events table {
+  width: 80%; /* Set the width of the table */
+  margin: 0 auto; /* Center the table horizontally */
+}
+
+/* Update the table cell styles */
+.login-events th, .login-events td {
+  padding: 6px; /* Reduce padding for smaller cells */
+}
+
+/* Update the table header styles */
+.login-events th {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center; /* Center align the text */
+}
+
+/* Update the table row styles */
+.login-events tbody tr:nth-child(even) {
+  background-color: #817784; /* Lighter color for better readability */
+}
+
+/* Update the button styles */
+.login-events button {
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px; /* Slightly smaller padding */
+  border-radius: 5px;
+  margin: 10px auto; /* Center the button horizontally */
+  display: block; /* Make the button a block element */
+  width: max-content; /* Fit to content */
+}
+
+/* Update the button hover effect */
+.login-events button:hover {
+  opacity: 0.9; /* Slight effect on hover */
+}
