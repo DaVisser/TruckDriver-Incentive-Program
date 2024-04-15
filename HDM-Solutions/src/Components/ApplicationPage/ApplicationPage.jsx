@@ -12,7 +12,8 @@ function TruckDriverProfile() {
   const [licenseID, setLicenseID] = useState('');
   const [sponsor, setSponsor] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
+  const [previousApplications, setPreviousApplications] = useState([]);
+  const [filteredApplications, setFilteredApplications] = useState([]); // New state for filtered applications
   const [sponsorData, setSponsorData] = useState([]);
   const [selectedSponsor, setSelectedSponsor] = useState(null);
 
@@ -32,6 +33,35 @@ function TruckDriverProfile() {
     };
     fetchSponsorData();
   }, []);
+
+  useEffect(() => {
+    // Fetch previous applications data when component mounts or when license ID changes
+    fetchPreviousApplications(licenseID);
+  }, [licenseID]);
+
+  // Fetch previous applications data
+  const fetchPreviousApplications = async (licenseID) => {
+    try {
+      const response = await fetch('https://up3xfwc3d7.execute-api.us-east-1.amazonaws.com/default/team06-PreviousApplication');
+      if (response.ok) {
+        const data = await response.json();
+        setPreviousApplications(data);
+        if (licenseID) {
+          // Filter applications based on the entered licenseID
+          const filteredApps = data.filter(application => application.licenseID === licenseID);
+          setFilteredApplications(filteredApps);
+        }
+      } else {
+        console.error('Failed to fetch previous applications data:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching previous applications data:', error);
+    }
+  };
+
+  const handleLicenseIDChange = (event) => {
+    setLicenseID(event.target.value);
+  };
 
   const handleApplicationSubmission = async () => {
     try {
@@ -62,7 +92,7 @@ function TruckDriverProfile() {
       console.log(sponsor);
       console.log('API Response: ', response);
       if (response.ok) {
-        setSuccessMessage('Support Ticket submitted successfully.');
+        setSuccessMessage('Driver Application submitted successfully.');
       } else {
         const data = await response.json();
       }
@@ -154,7 +184,32 @@ function TruckDriverProfile() {
 
       {displaySection === 'viewPreviousApplications' && (
         <div>
-          <p>View Previous Applications Section</p>
+          <label>
+            License ID:<br />
+            <input type="text" value={licenseID} onChange={handleLicenseIDChange} />
+          </label><br />
+          {filteredApplications.length > 0 ? (
+            <div>
+              <h2>Previous Applications</h2>
+              <ul>
+                {filteredApplications.map((application, index) => (
+                  <li key={index}>
+                    {/* Render application details */}
+                    <p>Name: {application.firstName} {application.lastName}</p>
+                    <p>Email: {application.email}</p>
+                    <p>Birthdate: {application.birthdate}</p>
+                    <p>Phone Number: {application.phoneNumber}</p>
+                    <p>Gender: {application.gender}</p>
+                    <p>License ID: {application.licenseID}</p>
+                    <p>Sponsor: {application.sponsor}</p>
+                    {/* Render other application fields as needed */}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p>No applications found with the entered license ID.</p>
+          )}
         </div>
       )}
     </div>
