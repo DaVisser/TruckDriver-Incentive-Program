@@ -184,6 +184,7 @@ function TruckDriverProfile() {
 
       {displaySection === 'viewPreviousApplications' && (
         <div>
+          <p>Enter LicenseID to find your previous applications.</p>
           <label>
             License ID:<br />
             <input type="text" value={licenseID} onChange={handleLicenseIDChange} />
