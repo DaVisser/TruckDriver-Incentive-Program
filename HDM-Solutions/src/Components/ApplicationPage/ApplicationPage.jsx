@@ -71,13 +71,6 @@ function TruckDriverProfile() {
     }
 };
 
-  const handleSponsorChange = (event) => {
-    const selectedSponsorName = event.target.value;
-    const selectedSponsor = sponsorData.find(sponsor => sponsor.name === selectedSponsorName);
-    setSelectedSponsor(selectedSponsor);
-    setSponsor(selectedSponsorName);
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     handleApplicationSubmission();
