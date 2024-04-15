@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './Cart.css';
 import { Link } from 'react-router-dom';
-import { getCurrentUser } from 'aws-amplify/auth';
+import { getCurrentUser, fetchUserAttributes} from 'aws-amplify/auth';
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [checkedOutItems, setCheckedOutItems] = useState([]);
     const [userPoints, setUserPoints] = useState(0);
     const [userName, setUserName] = useState('');
+    const [userEmail, setUserEmail] = useState('');
 
     useEffect(() => {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -20,6 +21,7 @@ function Cart() {
         const getUserName = async () => {
             try {
                 const user = await getCurrentUser();
+                console.log("current user info is:", user);
                 const username = user.username;
                 setUserName(username);
             } catch (error) {
@@ -27,6 +29,20 @@ function Cart() {
             }
         };
         getUserName();
+    }, []);
+
+    useEffect(() => {
+        const getUserAttributes = async () => {
+            try {
+                const user = await fetchUserAttributes();
+                console.log("current user info is:", user);
+                const userEmail = user.email;
+                setUserEmail(userEmail);
+            } catch (error) {
+                console.error('Error fetching user name:', error);
+            }
+        };
+        getUserAttributes();
     }, []);
 
     const fetchUserPoints = async () => {
@@ -85,9 +101,12 @@ function Cart() {
                 });
                 const result = await response.json();
                 if (response.ok) {
-                    console.log('Checkout successful, points left:', result.newPoints);
                     setUserPoints(result.newPoints);
                     setCheckedOutItems([...checkedOutItems, ...cartItems]);
+
+                    // Call the email Lambda function
+                    await sendConfirmationEmail(userName, cartItems, result.newPoints);
+
                     localStorage.setItem('checkedOutItems', JSON.stringify([...checkedOutItems, ...cartItems]));
                     setCartItems([]);
                     localStorage.removeItem('cart');
@@ -100,6 +119,29 @@ function Cart() {
             }
         } else {
             alert('Insufficient points');
+        }
+    };
+
+    const sendConfirmationEmail = async (username, items, remainingPoints) => {
+        try {
+            console.log("items are: ", items);
+            const emailResponse = await fetch('https://i94de43jl1.execute-api.us-east-1.amazonaws.com/dev/transaction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: userEmail, 
+                    username: username,
+                    itemsPurchased: items.map(item => ({ name: item.trackName, quantity: item.quantity })),
+                    remainingPoints: remainingPoints
+                })
+            });
+            const emailResult = await emailResponse.json();
+            if (!emailResponse.ok) throw new Error(emailResult.error);
+            console.log('Email sent successfully:', emailResult.message);
+        } catch (error) {
+            console.error('Failed to send confirmation email:', error);
         }
     };
 
