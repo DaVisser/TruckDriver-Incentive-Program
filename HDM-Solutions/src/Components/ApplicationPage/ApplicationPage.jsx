@@ -33,14 +33,54 @@ function TruckDriverProfile() {
     fetchSponsorData();
   }, []);
 
+  const handleApplicationSubmission = async () => {
+    try {
+      const response = await fetch('https://i0hrund9ya.execute-api.us-east-1.amazonaws.com/default/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          birthdate,
+          phoneNumber,
+          phoneNumber,
+          gender,
+          licenseID,
+          sponsor
+        }),
+      });
+      console.log(firstName);
+      console.log(lastName);
+      console.log(email);
+      console.log(birthdate);
+      console.log(phoneNumber);
+      console.log(gender);
+      console.log(licenseID);
+      console.log(sponsor);
+      console.log('API Response: ', response);
+      if (response.ok) {
+        setSuccessMessage('Support Ticket submitted successfully.');
+      } else {
+        const data = await response.json();
+      }
+    } catch (error) {
+      console.error('Error submitting support ticket:', error);
+    }
+};
+
   const handleSponsorChange = (event) => {
     const selectedSponsorName = event.target.value;
     const selectedSponsor = sponsorData.find(sponsor => sponsor.name === selectedSponsorName);
     setSelectedSponsor(selectedSponsor);
+    setSponsor(selectedSponsorName);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    handleApplicationSubmission();
     // Here you can add your submission logic, for example, submitting data to your backend
     // After successful submission, set the success message
     setSuccessMessage('Application submitted successfully!');
@@ -104,15 +144,15 @@ function TruckDriverProfile() {
             <input type="text" value={licenseID} onChange={(e) => setLicenseID(e.target.value)} />
           </label><br />
           <div>
-            <p>Choose Sponsor:</p>
-            <select onChange={handleSponsorChange}>
-              <option value="">Select</option>
-              {Array.isArray(sponsorData) ? sponsorData.map((sponsor, index) => (
-                <option key={index} value={sponsor.name}>
-                  {sponsor.name}
-                </option>
-              )) : null}
-            </select>
+          <p>Choose Sponsor:</p>
+          <select value={sponsor} onChange={(e) => setSponsor(e.target.value)}>
+            <option value="">Select</option>
+            {Array.isArray(sponsorData) ? sponsorData.map((sponsor, index) => (
+              <option key={index} value={sponsor.name}>
+                {sponsor.name}
+              </option>
+            )) : null}
+          </select>
           </div>
           <button type="submit">Submit</button>
           {successMessage && <p className="success-message">{successMessage}</p>}
