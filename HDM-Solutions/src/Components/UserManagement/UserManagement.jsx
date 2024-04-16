@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import './UserManagement.css';
 import { getCurrentUser} from 'aws-amplify/auth';
 
-
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
     const [userName, setUserName] = useState('');
@@ -22,6 +21,26 @@ const UserManagement = () => {
     });
     const [loginEvents, setLoginEvents] = useState([]);
     const [showLoginEvents, setShowLoginEvents] = useState(false); // NEW: Control login events visibility
+    const [sponsorData, setSponsorData] = useState([]); // State for sponsor data
+
+    // Function to fetch sponsor data from the API
+    const fetchSponsorData = async () => {
+        try {
+            const response = await fetch('https://5tdz19ogqf.execute-api.us-east-1.amazonaws.com/default/team06-SponsorInformation');
+            if (response.ok) {
+                const data = await response.json();
+                setSponsorData(data); // Set sponsorData to the array
+            } else {
+                console.error('Failed to fetch sponsor data:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching sponsor data:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchSponsorData(); // Fetch sponsor data on component mount
+    }, []);
 
     // calls a lambda function that disables a user in cognito
     const handleDeactivate = async (username) => {
@@ -134,7 +153,7 @@ useEffect(() => {
 useEffect(() => {
     const fetchLoginEvents = async () => {
         try {
-        const response = await fetch('https://knwizrbtec.execute-api.us-east-1.amazonaws.com/dev/loginevents');
+        const response = await fetch('https://knwizrbtec.execute-api.us-east-1.amazonaws.com/dev/team06-loginRetrievalLogs');
         const data = await response.json();
         setLoginEvents(data);
         } catch (error) {
@@ -172,6 +191,16 @@ return (
         <button className="create-user-btn" onClick={() => setShowCreateUserForm(true)}>Create User</button> {/* Create User button */}
         {showCreateUserForm && (
     <form className="create-user-form" onSubmit={handleCreateUser}>
+    {/* Adding  the organization selection */}
+    <label>Organization</label>
+    <select name="organization" value={newUserData.organization} onChange={e => setNewUserData({ ...newUserData, organization: e.target.value })} required>
+        <option value="">Select Organization</option>
+        {Array.isArray(sponsorData) && sponsorData.map((sponsor, index) => (
+            <option key={index} value={sponsor.name}>
+                {sponsor.name}
+            </option>
+        ))}
+    </select>
     <label>Username</label>
     <input type="text" name="username" value={newUserData.username} onChange={e => setNewUserData({ ...newUserData, username: e.target.value })} required />
 
@@ -195,8 +224,13 @@ return (
     </select>
 
     <label>Phone Number</label>
-    <input type="text" name="phone_number" value={newUserData.phone_number} onChange={e => setNewUserData({ ...newUserData, phone_number: e.target.value })} required />
-
+    <input 
+        type="tel" 
+        name="phone_number" 
+        value={newUserData.phone_number} 
+        onChange={e => setNewUserData({ ...newUserData, phone_number: e.target.value })} 
+        required 
+    />
     <label>Role</label>
     <input type="text" name="role" value={newUserData.role} onChange={e => setNewUserData({ ...newUserData, role: e.target.value })} required />
 
