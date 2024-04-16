@@ -24,6 +24,43 @@ const UserManagement = () => {
     const [showLoginEvents, setShowLoginEvents] = useState(false); // NEW: Control login events visibility
     const [showProductsPurchases, setShowProductsPurchases] = useState(false); // State variable to control ProductsPurchases table visibility
     const [productsPurchases, setProductsPurchases] = useState([]); // State variable to hold ProductsPurchases data
+    const [pointsToAdd, setPointsToAdd] = useState(0); // State variable to hold the points to add
+    const [showAddPointsModal, setShowAddPointsModal] = useState(false); // State variable to control the visibility of the modal
+    const [modifyUserUserName, setModifyUserUserName] = useState('');
+    // Function to handle the addition of points to a user
+    const handleAddPoints = async (username, pointsToAdd) => {
+        try {
+            const response = await fetch('https://p89w8l3slg.execute-api.us-east-1.amazonaws.com/dev/team06-ModifyPoints', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, pointsToAdd }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add points to user');
+            }else{
+                alert('Added Points Successfully!.');
+            }
+            setShowAddPointsModal(false);
+        } catch (error) {
+            console.error('Error adding points to user:', error);
+            alert('Failed to add points.');
+            // Handle error
+        }
+    };
+
+    // Function to open the modal and set the user ID
+    const openAddPointsModal = (modifyUsername) => {
+        setShowAddPointsModal(true);
+        setModifyUserUserName(modifyUsername);
+    };
+
+    // Function to close the modal
+    const closeAddPointsModal = () => {
+        setShowAddPointsModal(false);
+        // Optionally, you can reset the user ID here
+    };
+
 
     const toggleProductsPurchases = async () => {
         setShowProductsPurchases(!showProductsPurchases); // Toggle table visibility
@@ -182,6 +219,22 @@ const UserManagement = () => {
     return (
         <div>
             <h1>User Management</h1>
+            {showAddPointsModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={closeAddPointsModal}>&times;</span>
+                        <h2>Add Points</h2>
+                        <input
+                            type="number"
+                            value={pointsToAdd}
+                            onChange={(e) => setPointsToAdd(parseInt(e.target.value))}
+                            min={0}
+                            max={10}
+                        />
+                        <button onClick={() => handleAddPoints(modifyUserUserName, pointsToAdd)}>Add Points</button>
+                    </div>
+                </div>
+            )}
             <button className="create-user-btn" onClick={() => setShowCreateUserForm(true)}>Create User</button> {/* Create User button */}
             {showCreateUserForm && (
     <form className="create-user-form" onSubmit={handleCreateUser}>
@@ -290,6 +343,7 @@ const UserManagement = () => {
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Add Points</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -301,6 +355,7 @@ const UserManagement = () => {
             <td>{user.LastName}</td>
             <td>{user.Email}</td>
             <td>{user.Role}</td>
+            <td><button onClick={() => openAddPointsModal(user.UserName)}>Add Points</button></td>
         </tr>
     ))}
 </tbody>
