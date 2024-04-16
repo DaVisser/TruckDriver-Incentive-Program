@@ -27,6 +27,16 @@ const UserManagement = () => {
     const [pointsToAdd, setPointsToAdd] = useState(0); // State variable to hold the points to add
     const [showAddPointsModal, setShowAddPointsModal] = useState(false); // State variable to control the visibility of the modal
     const [modifyUserUserName, setModifyUserUserName] = useState('');
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [usersPerPage] = useState(7);
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
     // Function to handle the addition of points to a user
     const handleAddPoints = async (username, pointsToAdd) => {
         try {
@@ -333,7 +343,7 @@ const UserManagement = () => {
             </section>
         )}
     </div>
-            <table>
+    <table>
                 {/* Table headers and rows */}
                 <thead>
                     <tr>
@@ -347,20 +357,28 @@ const UserManagement = () => {
                     </tr>
                 </thead>
                 <tbody>
-    {users.filter(user => userRole !== 'Admin' || user.Role !== 'Admin').map(user => (
-        <tr key={user.UserId}>
-            <td><button onClick={() => handleDeactivate(user.UserName)}>De-Activate</button></td>
-            <td>{user.UserName}</td>
-            <td>{user.FirstName}</td>
-            <td>{user.LastName}</td>
-            <td>{user.Email}</td>
-            <td>{user.Role}</td>
-            <td><button onClick={() => openAddPointsModal(user.UserName)}>Add Points</button></td>
-        </tr>
-    ))}
-</tbody>
-
+                    {/* Map through currentUsers instead of users */}
+                    {currentUsers.map((user) => (
+                        <tr key={user.UserId}>
+                            <td><button onClick={() => handleDeactivate(user.UserName)}>De-Activate</button></td>
+                            <td>{user.UserName}</td>
+                            <td>{user.FirstName}</td>
+                            <td>{user.LastName}</td>
+                            <td>{user.Email}</td>
+                            <td>{user.Role}</td>
+                            <td><button onClick={() => openAddPointsModal(user.UserName)}>Add Points</button></td>
+                        </tr>
+                    ))}
+                </tbody>
             </table>
+            {/* Pagination buttons */}
+            <div className="pagination">
+                <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
+                {Array.from({ length: Math.ceil(users.length / usersPerPage) }, (_, index) => (
+                    <button key={index + 1} onClick={() => paginate(index + 1)}>{index + 1}</button>
+                ))}
+                <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(users.length / usersPerPage)}>Next</button>
+            </div>
 </div>
     );
 };
