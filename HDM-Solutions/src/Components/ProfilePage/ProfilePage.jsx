@@ -34,13 +34,45 @@ const ProfilePage = () => {
         Role: '',
         Application_Status: 'Pending'
     });
+    const [userRole, setUserRole] = useState('')
+    const [userPoints, setUserPoints] = useState(0);
+
+    const fetchUserPoints = async () => {
+        try {
+            const userSession = await getCurrentUser();
+            const userId = userSession.userId;
+            const response = await fetch(`https://7u2pt3y8zd.execute-api.us-east-1.amazonaws.com/prod/UserInfo`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${userId}`,
+                },
+            });
+            const data = await response.json();
+            if (data && data.length > 0 && data[0].Points) {
+                setUserPoints(data[0].Points);
+            } else {
+                console.error('No points data available:', data);
+            }
+        } catch (error) {
+            console.error('Error fetching user info:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserPoints();
+    }, []);
 
     const fetchUserInfo = async () => {
         try {
             //Congito Provides function to call user info. So we switched from API call to this instead.
             const userAttr = await fetchUserAttributes();
-            console.log("Tesing: ", userAttr);
-            setUserInfo(userAttr);  
+            const user = await getCurrentUser();
+            const response = await fetch(`https://1hmxcygemd.execute-api.us-east-1.amazonaws.com/dev/user?username=${user.username}`);
+            const data = await response.json();
+            const role =  data.role;
+            setUserRole(role);
+            userAttr['custom:Role'] = role;
+            setUserInfo(userAttr);
         } catch (error) {
           console.error('Error fetching user info:', error);
         }
@@ -390,6 +422,7 @@ const ProfilePage = () => {
                             <p><strong>Gender:</strong> {driverInfo.gender}</p>
                             <p><strong>License ID:</strong> {driverInfo.LicenseID}</p>
                             <p><strong>Role:</strong> {driverInfo.Role}</p>
+                            <p><strong>Points:</strong> {userPoints}</p>
                             <p><strong>Application Status:</strong> {driverInfo.Application_Status}</p>
                         </>
                     )}

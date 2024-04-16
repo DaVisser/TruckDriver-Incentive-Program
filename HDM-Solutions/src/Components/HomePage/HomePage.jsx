@@ -40,7 +40,9 @@ const HomePage = ({ user }) => {
       console.error('Error fetching user info:', error);
     }
   };
-
+  useEffect(() => {
+    fetchPoints();
+  }, []);
   const fetchLoginEvents = async () => {
     try {
       const response = await fetch('https://knwizrbtec.execute-api.us-east-1.amazonaws.com/dev/loginevents');
