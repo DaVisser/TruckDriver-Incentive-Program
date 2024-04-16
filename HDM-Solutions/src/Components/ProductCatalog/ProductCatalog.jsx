@@ -3,7 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './ProductCatalog.css';
 import { Grid, Header, Segment, Button, Form, Message, Image } from 'semantic-ui-react';
-import { signOut, getCurrentUser, fetchUserAttributes} from 'aws-amplify/auth';
+// import { signOut, getCurrentUser, fetchUserAttributes } from 'aws-amplify/auth';
+import { signOut, getCurrentUser, fetchUserAttributes } from 'aws-amplify/auth';
 
 function ProductCatalog() {
     const [displaySection, setDisplaySection] = useState('songs');
@@ -16,6 +17,13 @@ function ProductCatalog() {
     const [editSong, setEditSong] = useState(Object);
     const [sortOrder, setSortOrder] = useState('newest'); // State to track sorting order
     const [priceOrder, setPriceOrder] = useState('lowest'); // State to track price sorting order
+    const handleSortChange = (e) => {
+        setSortOrder(e.target.value);
+    };
+
+    const handlePriceSortChange = (e) => {
+        setPriceOrder(e.target.value);
+    };
 
     const artistIds = {
         'All Artists': '',
@@ -36,7 +44,9 @@ function ProductCatalog() {
             }
         };
         checkUserRole();
+        console.log("User role is " + userRole);
     }, []);
+
 
     useEffect(() => {
         const fetchSongsForArtist = async (artistId) => {
@@ -162,16 +172,7 @@ function ProductCatalog() {
         setErrorMessage('');
         setSuccessMessage('');
     };
-
-    const handleSortChange = (e) => {
-        setSortOrder(e.target.value);
-    };
-
-    const handlePriceSortChange = (e) => {
-        setPriceOrder(e.target.value);
-    };
-
-    const back = () =>{
+    const back = () => {
         clearMessages();
         setDisplaySection('songs');
     };
@@ -222,9 +223,10 @@ function ProductCatalog() {
                 </div>
             </div>
             {displaySection === 'ModifyPoints' && (
+
                 <Form>
                     <p style={{ color: 'red' }}><strong>Song Price (USD):</strong> {editSong.collectionPrice}</p>
-                    <p style={{ color: 'red' }}><strong>Current Price (Points):</strong> {editSong.collectionPrice *100}</p>
+                    <p style={{ color: 'red' }}><strong>Current Price (Points):</strong> {editSong.collectionPrice * 100}</p>
                     <Form.Input
                         label='Enter New Point Value'
                         placeholder='Enter New Point Value'
@@ -250,35 +252,43 @@ function ProductCatalog() {
             )}
             {displaySection === 'songs' && (
                 <>
-                    <div className="songs-grid">
-                        {sortedSongsByPrice
-                            .filter(song => selectedArtist === 'All Artists' || song.artistName === selectedArtist || song.trackName.includes(selectedArtist))
-                            .map((song, index) => (
-                                <div key={index} className="song-card">
-                                    <img src={song.artworkUrl100} alt={song.trackName} className="song-image" />
-                                    <div className="song-info">
-                                        <input
-                                            type="text"
-                                            value={song.trackName}
-                                            onChange={(e) => editProductName(index, e.target.value)}
-                                        />
-                                        <div className="song-artist">{song.artistName}</div>
-                                        <div className="song-release-year">Release Year: {new Date(song.releaseDate).getFullYear()}</div>
-                                        <div className="song-price">
-                                            {song.discounted ? Math.round(song.collectionPrice * 0.9 * 100) : Math.round(song.collectionPrice * 100)} Points
-                                            {!song.discounted && <button onClick={() => applyDiscount(index)}>Apply Discount</button>}
-                                        </div>
-                                        {(userRole === 'Sponsor' || userRole === 'Admin') && <button className="add-to-cart-btn" onClick={() => modifyPoints(song)}>Modify Points</button>}
-                                        <button className="add-to-cart-btn" onClick={() => addToCart(song)}>Add to Cart</button>
-                                        <button className="delete-from-catalog-btn" style={{ backgroundColor: 'red' }} onClick={() => deleteFromCatalog(index)}>Delete from Catalog</button>
-                                    </div>
-                                </div>
+                    <div className="artist-filter">
+                        <label>Filter by Artist: </label>
+                        <select value={selectedArtist} onChange={(e) => setSelectedArtist(e.target.value)}>
+                            {Object.keys(artistIds).map(artist => (
+                                <option key={artist} value={artist}>{artist}</option>
                             ))}
+                        </select>
+                    </div>
+                    <div className="songs-grid">
+                        {artistSongs.filter(song => selectedArtist === 'All Artists' || song.artistName === selectedArtist || song.trackName.includes(selectedArtist)).map((song, index) => (
+                            <div key={index} className="song-card">
+                                <img src={song.artworkUrl100} alt={song.trackName} className="song-image" />
+                                <div className="song-info">
+                                    <input
+                                        type="text"
+                                        value={song.trackName}
+                                        onChange={(e) => editProductName(index, e.target.value)}
+                                    />
+                                    <div className="song-artist">{song.artistName}</div>
+                                    <div className="song-price">
+                                        {song.discounted ? Math.round(song.collectionPrice * 0.9 * 100) : Math.round(song.collectionPrice * 100)} Points
+                                        {!song.discounted && <button onClick={() => applyDiscount(index)}>Apply Discount</button>}
+                                    </div>
+                                    {(userRole === 'Sponsor' || userRole === 'Admin') && <button className="add-to-cart-btn" onClick={() => modifyPoints(song)}>Modify Points</button>}
+                                    <button className="add-to-cart-btn" onClick={() => addToCart(song)}>Add to Cart</button>
+                                    <button className="delete-from-catalog-btn" style={{ backgroundColor: 'red' }} onClick={() => deleteFromCatalog(index)}>Delete from Catalog</button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                     <button onClick={resetCatalog}>Reset Catalog</button>
+
                 </>
-            )}
-        </div>
+            )
+            }
+
+        </div >
     );
 }
 
