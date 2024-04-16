@@ -97,8 +97,19 @@ function Cart() {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ username: userName, pointsToDeduct: totalPoints })
+                    body: JSON.stringify({ 
+                        username: userName, 
+                        pointsToDeduct: totalPoints ,
+                        productsPurchased: cartItems.map(item => ({
+                            productName: item.trackName,
+                            price: item.collectionPrice,
+                            username: userName,
+                            date: new Date().toISOString()
+                        }))
+                    })
+                    
                 });
+                console.log('Testing', response);
                 const result = await response.json();
                 if (response.ok) {
                     setUserPoints(result.newPoints);
