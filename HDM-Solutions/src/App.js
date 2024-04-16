@@ -331,7 +331,7 @@ export default function App() {
     clearTimeout(window.idleTimeout);
     window.idleTimeout = setTimeout(() => {
       signOut();
-    }, 300000); // 30 seconds
+    }, 3000000); // 30 seconds
   }, [signOut]);
   useEffect(() => {
     document.addEventListener('mousemove', handleUserActivity);

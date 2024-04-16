@@ -22,6 +22,26 @@ const UserManagement = () => {
     });
     const [loginEvents, setLoginEvents] = useState([]);
     const [showLoginEvents, setShowLoginEvents] = useState(false); // NEW: Control login events visibility
+    const [showProductsPurchases, setShowProductsPurchases] = useState(false); // State variable to control ProductsPurchases table visibility
+    const [productsPurchases, setProductsPurchases] = useState([]); // State variable to hold ProductsPurchases data
+
+    const toggleProductsPurchases = async () => {
+        setShowProductsPurchases(!showProductsPurchases); // Toggle table visibility
+        if (!showProductsPurchases) {
+            // Fetch ProductsPurchases data if not already fetched
+            try {
+                
+                const response = await fetch(`https://sprfdiw4uc.execute-api.us-east-1.amazonaws.com/dev/team06-GrabPurchasedProducts`);
+                const data = await response.json();
+                const sortedData = data.sort((a, b) => a.ID - b.ID);
+                setProductsPurchases(data);
+            } catch (error) {
+                console.error('Error fetching ProductsPurchases data:', error);
+                // Handle error
+            }
+        }
+    };
+
 
     // write a lambda function that disables a user in cognito
     const handleDeactivate = async (username) => {
@@ -111,8 +131,9 @@ const UserManagement = () => {
         try {
           const response = await fetch(`https://1hmxcygemd.execute-api.us-east-1.amazonaws.com/dev/user?username=${userName}`);
           const data = await response.json();
-          
+
           setUserRole(data.role); // Assuming the API response has a 'role' field
+          console.log('UserRole: ', data.role);
           setIsLoading(false); // Loading complete
         } catch (error) {
           console.error('Error checking user role:', error);
@@ -126,7 +147,7 @@ const UserManagement = () => {
     useEffect(() => {
         const fetchLoginEvents = async () => {
           try {
-            const response = await fetch('https://knwizrbtec.execute-api.us-east-1.amazonaws.com/dev/loginevents');
+            const response = await fetch('https://knwizrbtec.execute-api.us-east-1.amazonaws.com/dev/team06-loginRetrievalLogs');
             const data = await response.json();
             setLoginEvents(data);
           } catch (error) {
@@ -195,6 +216,44 @@ const UserManagement = () => {
         <button type="submit" className="submit-btn">Submit</button>
     </form>
 )}
+
+    <div>
+                {/* Toggle button for ProductsPurchases table */}
+                {userRole === 'Admin' && (
+                    <button onClick={toggleProductsPurchases}>
+                        {showProductsPurchases ? 'Hide Products Purchases' : 'Show Products Purchases'}
+                    </button>
+                )}
+                {/* ProductsPurchases table */}
+                {showProductsPurchases && (
+                    <section className="login-events">
+                        <h2>Products Purchases</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Username</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {productsPurchases.map((purchase, index) => (
+                                <tr key={index}>
+                                    <td>{purchase.ID}</td>
+                                    <td>{purchase.ProductName}</td>
+                                    <td>{purchase.Price}</td>
+                                    <td>{purchase.Username}</td>
+                                    <td>{new Date(purchase.Date).toLocaleString()}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </section>
+                )}
+            </div>
+
     <div>
         <button onClick={toggleLoginEvents}>
             {showLoginEvents ? 'Hide Login Events' : 'Show Login Events'}
