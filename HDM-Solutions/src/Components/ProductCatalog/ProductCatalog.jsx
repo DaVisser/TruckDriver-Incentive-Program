@@ -252,14 +252,6 @@ function ProductCatalog() {
             )}
             {displaySection === 'songs' && (
                 <>
-                    <div className="artist-filter">
-                        <label>Filter by Artist: </label>
-                        <select value={selectedArtist} onChange={(e) => setSelectedArtist(e.target.value)}>
-                            {Object.keys(artistIds).map(artist => (
-                                <option key={artist} value={artist}>{artist}</option>
-                            ))}
-                        </select>
-                    </div>
                     <div className="songs-grid">
                         {artistSongs.filter(song => selectedArtist === 'All Artists' || song.artistName === selectedArtist || song.trackName.includes(selectedArtist)).map((song, index) => (
                             <div key={index} className="song-card">
