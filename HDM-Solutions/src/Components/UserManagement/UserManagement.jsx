@@ -24,6 +24,56 @@ const UserManagement = () => {
     const [showLoginEvents, setShowLoginEvents] = useState(false); // NEW: Control login events visibility
     const [showProductsPurchases, setShowProductsPurchases] = useState(false); // State variable to control ProductsPurchases table visibility
     const [productsPurchases, setProductsPurchases] = useState([]); // State variable to hold ProductsPurchases data
+    const [pointsToAdd, setPointsToAdd] = useState(0); // State variable to hold the points to add
+    const [showAddPointsModal, setShowAddPointsModal] = useState(false); // State variable to control the visibility of the modal
+    const [modifyUserUserName, setModifyUserUserName] = useState('');
+    const [modifyUserIdentifier, setmodifyUserIdentifier] = useState('');
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [usersPerPage] = useState(7);
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+    // Function to handle the addition of points to a user
+    const handleAddPoints = async (identifier, pointsToAdd) => {
+        try {
+            const response = await fetch('https://p89w8l3slg.execute-api.us-east-1.amazonaws.com/dev/team06-ModifyPoints', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ identifier, pointsToAdd }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add points to user');
+            }else{
+                alert('Added Points Successfully!.');
+            }
+            setShowAddPointsModal(false);
+        } catch (error) {
+            console.error('Error adding points to user:', error);
+            alert('Failed to add points.');
+            // Handle error
+        }
+    };
+
+    // Function to open the modal and set the user ID
+    const openAddPointsModal = (modifyUsername,Identifier) => {
+        setShowAddPointsModal(true);
+        setModifyUserUserName(modifyUsername);
+        setmodifyUserIdentifier(Identifier);
+        console.log("IDENTIFIER:" , Identifier);
+    };
+
+    // Function to close the modal
+    const closeAddPointsModal = () => {
+        setShowAddPointsModal(false);
+        // Optionally, you can reset the user ID here
+    };
+
 
     const toggleProductsPurchases = async () => {
         setShowProductsPurchases(!showProductsPurchases); // Toggle table visibility
@@ -165,7 +215,10 @@ const UserManagement = () => {
                 try {
                     const response = await fetch('https://cqf7mwevac.execute-api.us-east-1.amazonaws.com/dev/users');
                     const data = await response.json();
-                    setUsers(data);
+                    // Filter out users without a Username or an Identifier
+                    const filteredUsers = data.filter(user => user.Username !== '' && user.Identifier !== null);
+                    console.log('Filtered: ', filteredUsers);
+                    setUsers(filteredUsers);
                 } catch (error) {
                     console.error('Error fetching users:', error);
                 }
@@ -182,6 +235,22 @@ const UserManagement = () => {
     return (
         <div>
             <h1>User Management</h1>
+            {showAddPointsModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={closeAddPointsModal}>&times;</span>
+                        <h2>Add Points</h2>
+                        <input
+                            type="number"
+                            value={pointsToAdd}
+                            onChange={(e) => setPointsToAdd(parseInt(e.target.value))}
+                            min={0}
+                            max={10}
+                        />
+                        <button onClick={() => handleAddPoints(modifyUserIdentifier, pointsToAdd)}>Add Points</button>
+                    </div>
+                </div>
+            )}
             <button className="create-user-btn" onClick={() => setShowCreateUserForm(true)}>Create User</button> {/* Create User button */}
             {showCreateUserForm && (
     <form className="create-user-form" onSubmit={handleCreateUser}>
@@ -280,7 +349,7 @@ const UserManagement = () => {
             </section>
         )}
     </div>
-            <table>
+    <table>
                 {/* Table headers and rows */}
                 <thead>
                     <tr>
@@ -290,22 +359,32 @@ const UserManagement = () => {
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Add Points</th>
                     </tr>
                 </thead>
                 <tbody>
-    {users.filter(user => userRole !== 'Admin' || user.Role !== 'Admin').map(user => (
-        <tr key={user.UserId}>
-            <td><button onClick={() => handleDeactivate(user.UserName)}>De-Activate</button></td>
-            <td>{user.UserName}</td>
-            <td>{user.FirstName}</td>
-            <td>{user.LastName}</td>
-            <td>{user.Email}</td>
-            <td>{user.Role}</td>
-        </tr>
-    ))}
-</tbody>
-
+                    {/* Map through currentUsers instead of users */}
+                    {currentUsers.map((user) => (
+                        <tr key={user.UserId}>
+                            <td><button onClick={() => handleDeactivate(user.UserName)}>De-Activate</button></td>
+                            <td>{user.UserName}</td>
+                            <td>{user.FirstName}</td>
+                            <td>{user.LastName}</td>
+                            <td>{user.Email}</td>
+                            <td>{user.Role}</td>
+                            <td><button onClick={() => openAddPointsModal(user.UserName,user.Identifier)}>Add Points</button></td>
+                        </tr>
+                    ))}
+                </tbody>
             </table>
+            {/* Pagination buttons */}
+            <div className="pagination">
+                <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
+                {Array.from({ length: Math.ceil(users.length / usersPerPage) }, (_, index) => (
+                    <button key={index + 1} onClick={() => paginate(index + 1)}>{index + 1}</button>
+                ))}
+                <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(users.length / usersPerPage)}>Next</button>
+            </div>
 </div>
     );
 };
