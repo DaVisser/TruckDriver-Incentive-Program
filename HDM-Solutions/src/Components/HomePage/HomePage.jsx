@@ -71,18 +71,18 @@ const HomePage = ({ user }) => {
     }
   };
 
-  useEffect(() => {
-    fetchPoints();
-    const interval = setInterval(() => {
-      setDriverScore(prevScore => {
-        const newScore = prevScore + pointsPerSecond;
-        localStorage.setItem('driverScore', newScore); // Update localStorage
-        return newScore;
-      });
-    }, 1000); // 1 second interval
-    setTimer(interval); // Store the interval ID in state
-    return () => clearInterval(timer); // Clean up interval on component unmount
-  }, [pointsPerSecond]);
+  // useEffect(() => {
+  //   fetchPoints();
+  //   const interval = setInterval(() => {
+  //     setDriverScore(prevScore => {
+  //       const newScore = prevScore + pointsPerSecond;
+  //       localStorage.setItem('driverScore', newScore); // Update localStorage
+  //       return newScore;
+  //     });
+  //   }, 1000); // 1 second interval
+  //   setTimer(interval); // Store the interval ID in state
+  //   return () => clearInterval(timer); // Clean up interval on component unmount
+  // }, [pointsPerSecond]);
 
   useEffect(() => {
     console.log('Current user:', user); // Check if user info is available
