@@ -27,6 +27,7 @@ const UserManagement = () => {
     const [pointsToAdd, setPointsToAdd] = useState(0); // State variable to hold the points to add
     const [showAddPointsModal, setShowAddPointsModal] = useState(false); // State variable to control the visibility of the modal
     const [modifyUserUserName, setModifyUserUserName] = useState('');
+    const [modifyUserIdentifier, setmodifyUserIdentifier] = useState('');
 
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(7);
@@ -38,12 +39,12 @@ const UserManagement = () => {
     const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
 
     // Function to handle the addition of points to a user
-    const handleAddPoints = async (username, pointsToAdd) => {
+    const handleAddPoints = async (identifier, pointsToAdd) => {
         try {
             const response = await fetch('https://p89w8l3slg.execute-api.us-east-1.amazonaws.com/dev/team06-ModifyPoints', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, pointsToAdd }),
+                body: JSON.stringify({ identifier, pointsToAdd }),
             });
 
             if (!response.ok) {
@@ -60,9 +61,11 @@ const UserManagement = () => {
     };
 
     // Function to open the modal and set the user ID
-    const openAddPointsModal = (modifyUsername) => {
+    const openAddPointsModal = (modifyUsername,Identifier) => {
         setShowAddPointsModal(true);
         setModifyUserUserName(modifyUsername);
+        setmodifyUserIdentifier(Identifier);
+        console.log("IDENTIFIER:" , Identifier);
     };
 
     // Function to close the modal
@@ -212,7 +215,10 @@ const UserManagement = () => {
                 try {
                     const response = await fetch('https://cqf7mwevac.execute-api.us-east-1.amazonaws.com/dev/users');
                     const data = await response.json();
-                    setUsers(data);
+                    // Filter out users without a Username or an Identifier
+                    const filteredUsers = data.filter(user => user.Username !== '' && user.Identifier !== null);
+                    console.log('Filtered: ', filteredUsers);
+                    setUsers(filteredUsers);
                 } catch (error) {
                     console.error('Error fetching users:', error);
                 }
@@ -241,7 +247,7 @@ const UserManagement = () => {
                             min={0}
                             max={10}
                         />
-                        <button onClick={() => handleAddPoints(modifyUserUserName, pointsToAdd)}>Add Points</button>
+                        <button onClick={() => handleAddPoints(modifyUserIdentifier, pointsToAdd)}>Add Points</button>
                     </div>
                 </div>
             )}
@@ -366,7 +372,7 @@ const UserManagement = () => {
                             <td>{user.LastName}</td>
                             <td>{user.Email}</td>
                             <td>{user.Role}</td>
-                            <td><button onClick={() => openAddPointsModal(user.UserName)}>Add Points</button></td>
+                            <td><button onClick={() => openAddPointsModal(user.UserName,user.Identifier)}>Add Points</button></td>
                         </tr>
                     ))}
                 </tbody>
