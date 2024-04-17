@@ -30,7 +30,9 @@ const awsmobile = {
         "PHONE_NUMBER",
         "EMAIL",
         "GIVEN_NAME",
-        "FAMILY_NAME"
+        "FAMILY_NAME",
+        "custome:Role",
+        "custome:LicenseID",
     ],
     "aws_cognito_mfa_configuration": "OPTIONAL",
     "aws_cognito_mfa_types": [

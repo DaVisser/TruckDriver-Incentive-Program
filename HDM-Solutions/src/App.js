@@ -5,7 +5,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import { Amplify } from "aws-amplify";
+import { Amplify} from "aws-amplify";
 import awsExports from './aws-exports';
 import './App.css'
 import { Authenticator, useAuthenticator, View, Button, Heading, TextField, useTheme, Image, Text } from '@aws-amplify/ui-react';
@@ -22,6 +22,8 @@ import Cart from './Components/ProductCatalog/Cart.jsx';
 import Reports from './Components/Reports/Reports.jsx';
 import { signOut, getCurrentUser } from 'aws-amplify/auth';
 Amplify.configure(awsExports)
+
+
 
 const components = {
   Header() {
@@ -236,11 +238,15 @@ const formFields = {
       label: 'LicenseID',
       placeholder: 'Enter your LicenseID',
       isRequired: true,
+      custom: true,
+      key: 'custom:LicenseID'  // Corrected key
     },
     Role: {
-      label: 'Role',
-      placeholder: 'Driver/Sponsor',
-      isRequired: true,
+        label: 'Role',
+        placeholder: 'Driver/Sponsor',
+        isRequired: true,
+        custom: true,
+        key: 'custom:Role'  // Corrected key
     },
   },
   forceNewPassword: {

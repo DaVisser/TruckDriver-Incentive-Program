@@ -5,6 +5,9 @@ import { getCurrentUser} from 'aws-amplify/auth';
 
 
 const UserManagement = () => {
+    
+    const [selectedSponsors, setSelectedSponsors] = useState([]); // For Admins to select multiple sponsors
+    const [sponsorData, setSponsorData] = useState([]);
     const [users, setUsers] = useState([]);
     const [userName, setUserName] = useState('');
     const [userRole, setUserRole] = useState('');
@@ -37,6 +40,25 @@ const UserManagement = () => {
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
     const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+
+    useEffect(() => {
+        const fetchSponsorData = async () => {
+          try {
+            const response = await fetch('https://5tdz19ogqf.execute-api.us-east-1.amazonaws.com/default/team06-SponsorInformation');
+            if (response.ok) {
+              const data = await response.json();
+              setSponsorData(data); // Set sponsorData to the array
+              console.log('Sponsors: ', data);
+            } else {
+              console.error('Failed to fetch sponsor data:', response.statusText);
+            }
+          } catch (error) {
+            console.error('Error fetching sponsor data:', error);
+          }
+        };
+        fetchSponsorData();
+      }, []);
 
     // Function to handle the addition of points to a user
     const handleAddPoints = async (identifier, pointsToAdd) => {
@@ -254,6 +276,17 @@ const UserManagement = () => {
             <button className="create-user-btn" onClick={() => setShowCreateUserForm(true)}>Create User</button> {/* Create User button */}
             {showCreateUserForm && (
     <form className="create-user-form" onSubmit={handleCreateUser}>
+        {userRole === 'Admin' && (
+            <div>
+                <label>Sponsors</label>
+                <select multiple value={selectedSponsors} onChange={e => setSelectedSponsors([...e.target.selectedOptions].map(o => o.value))}>
+                    {sponsorData.map(sponsor => (
+                        <option key={sponsor.sponsor_id} value={sponsor.sponsor_id}>{sponsor.name}</option>
+                    ))}
+                </select>
+            </div>
+        )}
+
         <label>Username</label>
         <input type="text" name="username" value={newUserData.username} onChange={e => setNewUserData({ ...newUserData, username: e.target.value })} required />
 
@@ -324,9 +357,11 @@ const UserManagement = () => {
             </div>
 
     <div>
+    {userRole === 'Admin' && (
         <button onClick={toggleLoginEvents}>
             {showLoginEvents ? 'Hide Login Events' : 'Show Login Events'}
         </button>
+    )}
         {showLoginEvents && (
             <section className="login-events">
                 <h2>Driver Login Activity</h2>
