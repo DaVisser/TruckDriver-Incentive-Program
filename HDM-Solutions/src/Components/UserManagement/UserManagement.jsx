@@ -328,26 +328,28 @@ const UserManagement = () => {
             {showLoginEvents ? 'Hide Login Events' : 'Show Login Events'}
         </button>
         {showLoginEvents && (
-            <section className="login-events">
-                <h2>Driver Login Activity</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>User Name</th>
-                            <th>Login Time</th>
+        <section className="login-events">
+            <h2>User Login Activity</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Login Time</th>
+                        <th>Login Success</th> {/* Add a new table header for Login Success */}
+                    </tr>
+                </thead>
+                <tbody>
+                    {loginEvents.map((event, index) => (
+                        <tr key={index}>
+                            <td>{event.UserName}</td>
+                            <td>{new Date(event.LoginTime).toLocaleString()}</td>
+                            <td>{event.LoginSuccess === 1 ? 'Success' : 'Failure'}</td> {/* Display login success status */}
                         </tr>
-                    </thead>
-                    <tbody>
-                        {loginEvents.map((event, index) => (
-                            <tr key={index}>
-                                <td>{event.UserName}</td>
-                                <td>{new Date(event.LoginTime).toLocaleString()}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </section>
-        )}
+                    ))}
+                </tbody>
+            </table>
+        </section>
+    )}
     </div>
     <table>
                 {/* Table headers and rows */}
